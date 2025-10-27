@@ -1,0 +1,342 @@
+:root {
+    --primary-color: #2e7d32;
+    --primary-dark: #1b5e20;
+    --primary-light: #4caf50;
+    --light-bg: #f9fff9;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    padding-top: 80px;
+    /* compensar navbar */
+    background-color: #fff;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    color: var(--primary-color) !important;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-brand span {
+    font-size: 14px;
+    font-weight: 400;
+    display: block;
+    margin-left: 5px;
+    color: #666;
+}
+
+.navbar-brand .logo-icon {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 12px;
+    margin-right: 10px;
+    margin: 0 0 12px;
+
+}
+
+.logo-icon img {
+    width: 50%;
+}
+
+.nav-link {
+    font-weight: 500;
+    color: var(--primary-color) !important;
+    margin: 0 5px;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: var(--primary-dark) !important;
+}
+
+.nav-link.active {
+    font-weight: 700;
+    color: var(--primary-dark) !important;
+}
+
+/* Botón hamburguesa visible */
+.navbar-toggler {
+    border: none;
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba%2830, 70, 32, 1%29' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+/* Botones grandes (hero, etc.) */
+.btn-large {
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 19px;
+    margin: 0 10px;
+}
+
+/* Botones pequeños (login/registro) */
+.btn-custom {
+    padding: 10px 24px;
+    font-size: 0.85rem;
+    border-radius: 6px;
+    margin-left: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-success {
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    background: var(--light-bg);
+}
+
+.btn-outline-success:hover {
+    background: var(--primary-color);
+    color: #fff;
+}
+
+.btn-success {
+    background: var(--primary-color);
+    border: none;
+}
+
+.btn-success:hover {
+    background: var(--primary-dark);
+}
+
+/* Hero */
+.hero {
+    position: relative;
+    height: 80vh;
+    background: url("https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&h=1080") center/cover no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.hero .overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    color: white;
+    max-width: 700px;
+    padding: 0 20px;
+    animation: fadeInUp 1.2s ease;
+}
+
+.hero h1 {
+    font-size: 3.2rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.primary {
+    color: var(--primary-light);
+}
+
+.hero p {
+    font-size: 1.15rem;
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+
+.primary-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+}
+
+.primary-btn:hover {
+    background: var(--primary-dark);
+}
+
+.outline-btn {
+    background: transparent;
+    border: 2px solid white;
+    color: white;
+}
+
+.outline-btn:hover {
+    background: white;
+    color: var(--primary-color);
+}
+
+/* Animaciones */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Secciones */
+section {
+    padding: 70px 20px;
+}
+
+section h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: 700;
+    color: var(--primary-dark);
+}
+
+section>p {
+    text-align: center;
+    margin-bottom: 50px;
+    font-size: 1.1rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Grid */
+
+@media (max-width:480px) {
+    .btn-group {
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+
+
+    }
+
+    .btn-group button {
+
+        width: 100%;
+        border: none;
+
+    }
+}
+
+.card {
+    background: #fff;
+    padding: 30px 20px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+
+.icon {
+    width: 70px;
+    height: 70px;
+    background: #e6f6ec;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+}
+
+.icon i {
+    color: var(--primary-color);
+    font-size: 24px;
+}
+
+.card h3 {
+    color: var(--primary-dark);
+    margin-bottom: 15px;
+}
+
+.productos {
+    background-color: var(--light-bg);
+}
+
+/* Testimonios */
+.testimonio-card {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+.testimonio-text {
+    font-style: italic;
+    margin-bottom: 20px;
+    position: relative;
+    padding: 0 20px;
+}
+
+.testimonio-text:before,
+.testimonio-text:after {
+    content: '"';
+    font-size: 40px;
+    color: var(--primary-light);
+    opacity: 0.3;
+    position: absolute;
+}
+
+.testimonio-text:before {
+    left: -10px;
+    top: -15px;
+}
+
+.testimonio-text:after {
+    right: -10px;
+    bottom: -30px;
+}
+
+.testimonio-author {
+    font-weight: 600;
+    color: var(--primary-dark);
+}
+
+/* Footer */
+footer {
+    background-color: #222;
+    color: white;
+    padding: 40px 0 20px;
+    text-align: center;
+}
+
+.footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.footer-links a {
+    color: white;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: var(--primary-light);
+}

@@ -1,0 +1,163 @@
+:root {
+  --primary: #2e7d32;
+  --primary-dark: #1b5e20;
+  --primary-light: #4caf50;
+  --secondary: #e8f5e9;
+}
+
+/* ESTILO GENERAL */
+body {
+  background: linear-gradient(to bottom right, var(--secondary), #ffffff);
+  font-family: "Poppins", sans-serif;
+  min-height: 100vh;
+  margin: 0;
+  overflow-x: hidden;
+  animation: fadeIn 0.8s ease-in;
+}
+
+/* ANIMACIÓN GENERAL */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* MINI HEADER */
+.mini-header {
+  background-color: var(--primary-dark);
+  color: white;
+  font-size: 0.9rem;
+  padding: 8px 0;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+/* HEADER PRINCIPAL */
+header {
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+  color: white;
+  text-align: center;
+  padding: 80px 20px 100px 20px;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+header img {
+  width: 90px;
+  margin-bottom: 15px;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+header h1 {
+  font-weight: 700;
+  font-size: 2.5rem;
+}
+
+header p {
+  font-size: 1.1rem;
+  color: #f1f1f1;
+}
+
+/* FORMULARIO */
+.form-container {
+  background-color: #fff;
+  max-width: 600px;
+  margin: -70px auto 50px auto;
+  padding: 40px 45px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: fadeUp 0.9s ease-out;
+}
+
+.form-container:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* CAMPOS */
+label {
+  font-weight: 500;
+  color: #333;
+}
+
+input,
+select {
+  border-radius: 10px !important;
+  padding: 10px;
+  border: 1px solid #ccc;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus,
+select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 6px var(--primary-light);
+}
+
+/* BOTÓN PRINCIPAL */
+.btn-reservar {
+  background-color: var(--primary);
+  border: none;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-weight: 600;
+  color: white;
+  width: 100%;
+  margin-top: 15px;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.btn-reservar:hover {
+  background-color: var(--primary-dark);
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.4);
+}
+/* === BOTÓN HOME === */
+.btn-home {
+  background-color: #2e7d32;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 12px;
+  margin-top: 15px;
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-home:hover {
+  background-color: #256628;
+  transform: scale(1.05);
+}
+
+/* FOOTER */
+footer {
+  text-align: center;
+  color: #777;
+  padding: 20px 0;
+  font-size: 0.9rem;
+}
+
+footer .social-icons i {
+  color: var(--primary);
+  margin: 0 8px;
+  font-size: 1.3rem;
+  transition: color 0.3s, transform 0.3s;
+}
+
+footer .social-icons i:hover {
+  color: var(--primary-dark);
+  transform: scale(1.2);
+}

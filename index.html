@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Restaurante gratiude Home</title>
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Iconos FontAwesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/style.css">
+
+
+</head>
+
+<body>
+
+  <!-- ==== NAVBAR ==== -->
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container">
+      <!-- Logo -->
+      <a class="navbar-brand" href="index.html">
+        <div class="logo-icon">
+          <img src="img/logoRestaurante.png" alt="Logo" class="img-fluid" style="width: 40px;">
+        </div>
+        Restaurante Gratitude
+      </a>
+
+      <!-- Botón responsive -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Contenido colapsable -->
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <!-- Aquí podrías meter más links si quieres -->
+        </ul>
+        <!-- Botones login/registro -->
+        <div class="d-flex flex-column flex-lg-row gap-2 ms-lg-3 mt-3 mt-lg-0">
+          <a href="\Login\index.html" class="btn btn-success btn-custom">
+            <i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión
+          </a>
+          <a href="\Registro\registro.html" class="btn btn-outline-success btn-custom">
+            <i class="fa-solid fa-user-plus"></i> Registrarse
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="overlay"></div>
+    <div class="hero-content">
+      <h1>Sabores <span class="primary">Únicos</span></h1>
+      <p>Descubre una experiencia gastronómica excepcional con ingredientes frescos y recetas tradicionales renovadas
+      </p>
+      <div class="btn-group">
+        <a href="register.html">
+          <button id="menuBtn" class="btn btn-large primary-btn"><i class="fa-solid fa-utensils"></i> Ver Nuestro
+            Menú</button>
+        </a>
+        <a href="\Reservas\index copy.html">
+          <button id="reservaBtn" class="btn btn-large outline-btn"><i class="fa-solid fa-calendar-days"></i> Reservar
+            Mesa</button>
+        </a>
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- Categorías -->
+  <section class="categorias">
+    <h2>Nuestras Especialidades</h2>
+    <p>Explora nuestras diferentes categorías gastronómicas, cada una con su propio carácter y sabor único</p>
+    <div class="grid">
+      <div class="card">
+        <div class="icon"><i class="fa-solid fa-cake-candles"></i></div>
+        <h3>Repostería</h3>
+        <p>Postres artesanales y dulces únicos</p>
+      </div>
+      <div class="card">
+        <div class="icon"><i class="fa-solid fa-ice-cream"></i></div>
+        <h3>Heladería</h3>
+        <p>Helados artesanales y batidos frescos</p>
+      </div>
+      <div class="card">
+        <div class="icon"><i class="fa-solid fa-crown"></i></div>
+        <h3>Gourmet</h3>
+        <p>Platos exclusivos para paladares exigentes</p>
+      </div>
+      <div class="card">
+        <div class="icon"><i class="fa-solid fa-mug-hot"></i></div>
+        <h3>Bebidas</h3>
+        <p>Cafés especiales y bebidas refrescantes</p>
+      </div>
+    </div>
+  </section>
+  <!-- About Section -->
+  <section id="about" class="py-5 bg-light">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6">
+          <h2 class="section-title">Nuestra Historia</h2>
+          <p>En Delicias Verdes nos apasiona crear experiencias dulces inolvidables. Desde 2010, nos dedicamos a
+            elaborar productos de repostería, heladería y panadería con ingredientes de la más alta calidad.</p>
+          <p>Nuestro equipo de chefs expertos combina técnicas tradicionales con toques innovadores para ofrecerte
+            sabores únicos que deleitarán tu paladar.</p>
+          <ul class="list-unstyled">
+            <li><i class="fas fa-check text-success me-2"></i>Ingredientes frescos y naturales</li>
+            <li><i class="fas fa-check text-success me-2"></i>Elaboración artesanal</li>
+            <li><i class="fas fa-check text-success me-2"></i>Compromiso con la calidad</li>
+            <li><i class="fas fa-check text-success me-2"></i>Sabores únicos y creativos</li>
+          </ul>
+        </div>
+        <div class="col-lg-6">
+          <img
+            src="https://images.unsplash.com/photo-1559339352-11d035aa65de?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+            class="img-fluid rounded shadow" alt="Nuestro equipo">
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- Testimonios -->
+  <section class="testimonios">
+    <h2>Lo Que Dicen Nuestros Clientes</h2>
+    <p>Experiencias reales de quienes han visitado nuestro restaurante</p>
+    <div id="testimoniosGrid" class="grid">
+      <div class="testimonio-card">
+        <div class="testimonio-text">
+          La mejor comida italiana que he probado en la ciudad. El ambiente es acogedor y el servicio excelente.
+        </div>
+        <div class="testimonio-author">- María González</div>
+      </div>
+      <div class="testimonio-card">
+        <div class="testimonio-text">
+          Volveré una y otra vez. Cada plato es una obra maestra de sabores y presentación impecable.
+        </div>
+        <div class="testimonio-author">- Carlos Mendoza</div>
+      </div>
+      <div class="testimonio-card">
+        <div class="testimonio-text">
+          Perfecto para una cena romántica. La iluminación, la música y por supuesto la comida crean una experiencia
+          inolvidable.
+        </div>
+        <div class="testimonio-author">- Ana y Javier Torres</div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- Contact Section -->
+  <section id="contact" class="py-5">
+    <div class="container">
+      <h2 class="section-title">Visítanos</h2>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-4">
+            <h5><i class="fas fa-map-marker-alt text-success me-2"></i>Dirección</h5>
+            <p>Calle Principal 123, Madrid, España</p>
+          </div>
+          <div class="mb-4">
+            <h5><i class="fas fa-clock text-success me-2"></i>Horario</h5>
+            <p>Lunes a Viernes: 8:00 - 20:00<br>Sábados y Domingos: 9:00 - 22:00</p>
+          </div>
+          <div class="mb-4">
+            <h5><i class="fas fa-phone text-success me-2"></i>Teléfono</h5>
+            <p>+34 912 345 678</p>
+          </div>
+          <div class="mb-4">
+            <h5><i class="fas fa-envelope text-success me-2"></i>Email</h5>
+            <p>info@deliciasverdes.com</p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="ratio ratio-16x9">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3037.454120653739!2d-3.703847384603954!3d40.41911797936466!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd42287e3a7a5d7b%3A0x4a3114d71c58c7e2!2sPuerta%20del%20Sol%2C%20Madrid%2C%20Spain!5e0!3m2!1sen!2sus!4v1641234567890!5m2!1sen!2sus"
+              style="border:0; border-radius: 8px;" allowfullscreen="" loading="lazy"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-links">
+      <a href="#">Inicio</a>
+      <a href="#">Menú</a>
+      <a href="#">Sobre Nosotros</a>
+      <a href="#">Contacto</a>
+      <a href="#">Términos y Condiciones</a>
+      <a href="#">Política de Privacidad</a>
+    </div>
+    <p>© 2023 RestaurantApp. Todos los derechos reservados.</p>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Inicializar tooltips de Bootstrap
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+
+  </script>
+
+</body>
+
+</html>
