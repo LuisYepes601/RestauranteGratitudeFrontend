@@ -1,0 +1,161 @@
+:root {
+  --verde-principal: #2e7d32;
+  --verde-hover: #1b4d1b;
+  --gris-claro: #f4f4f7;
+  --gris-input: #e0e0e0;
+  --gris-text: #666;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--gris-claro);
+  margin: 0;
+  padding: 40px 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.checkout-container {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  max-width: 900px;
+  width: 100%;
+}
+
+h1 {
+  text-align: center;
+  color: var(--verde-principal);
+  margin-bottom: 20px;
+  font-weight: 700;
+  font-size: 2rem;
+}
+
+h2 {
+  color: #2e7d32;
+  /* verde */
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+
+/* Carrito */
+.cart-summary {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 12px;
+  transition: transform 0.3s;
+}
+
+.cart-item:last-child {
+  border-bottom: none;
+}
+
+.cart-item:hover {
+  transform: scale(1.02);
+}
+
+.cart-item img {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-right: 15px;
+}
+
+.cart-item-info {
+  flex: 1;
+}
+
+.cart-item-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+  font-size: 1rem;
+}
+
+.cart-item-price {
+  color: var(--gris-text);
+  font-size: 0.9rem;
+}
+
+.cart-item-total {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.total {
+  text-align: right;
+  font-weight: 700;
+  font-size: 1.3rem;
+  margin-top: 10px;
+}
+
+/* Formulario de cliente (solo lectura) */
+.customer-form {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.customer-form label {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.customer-form input {
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--gris-input);
+  width: 100%;
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  background: #f9f9f9;
+  color: #333;
+}
+
+.confirm-btn {
+  background: var(--verde-principal);
+  color: white;
+  font-weight: 700;
+  padding: 14px;
+  border: none;
+  border-radius: 18px;
+  cursor: pointer;
+  margin-top: 15px;
+  font-size: 1rem;
+  transition: 0.3s;
+}
+
+.confirm-btn:hover {
+  background: var(--verde-hover);
+}
+
+/* Animaciones */
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeUp 0.5s ease forwards;
+}
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
