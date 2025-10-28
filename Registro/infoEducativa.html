@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro Información Educativa</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@5/dark.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="\Registro\css\infoEducativa.css">
+</head>
+
+<body>
+    <div class="container">
+        <h2>Registro de Información Educativa</h2>
+
+        <form id="formEducativo">
+
+
+            <!-- Contenedor de estudios -->
+            <div id="estudiosContainer">
+                <div class="section-block estudio-block">
+                    <h4>Estudio 1</h4>
+
+                    <label for="nombre0">Nombre del estudio</label>
+                    <input type="text" id="nombre0" name="nombre" placeholder="Ej: Ingeniería de Software" required />
+
+                    <label for="nivelEstudio0">Nivel de estudio</label>
+                    <select id="nivelEstudio0" name="nivelEstudio" required>
+                        <option value="">Seleccione una opción</option>
+                        <option>Primaria</option>
+                        <option>Secundaria</option>
+                        <option>Técnico</option>
+                        <option>Tecnólogo</option>
+                        <option>Pregrado</option>
+                        <option>Postgrado</option>
+                        <option>Maestría</option>
+                        <option>Doctorado</option>
+                    </select>
+
+                    <label for="nombreInstitucion0">Nombre de la institución</label>
+                    <input type="text" id="nombreInstitucion0" name="nombreInstitucion"
+                        placeholder="Ej: Universidad de Cartagena" required />
+
+                    <label for="fechaInicio0">Fecha de inicio</label>
+                    <input type="date" id="fechaInicio0" name="fechaInicio" required />
+
+                    <label for="estadoEstudio0">Estado del estudio</label>
+                    <select id="estadoEstudio0" name="estadoEstudio" required>
+                        <option value="">Seleccione una opción</option>
+                        <option>En curso</option>
+                        <option>Finalizado</option>
+                        <option>Certificado</option>
+                        <option>Abandonado</option>
+                    </select>
+
+                    <label for="modalidad0">Modalidad</label>
+                    <select id="modalidad0" name="modalidad" required>
+                        <option value="">Seleccione una opción</option>
+                        <option>Presencial</option>
+                        <option>Virtual</option>
+                        <option>Mixta</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="nav-buttons">
+                <button type="button" id="btnAgregar" class="btn btn-secondary"> Agregar otro estudio</button>
+                <button type="submit" id="btnGuardar" class="btn btn-primary"> Guardar</button>
+                <button type="button" id="btnOmitir" class="btn btn-omit"> Omitir</button>
+            </div>
+
+        </form>
+    </div>
+
+    <script src="\Registro\js\infoEducativa.js"></script>
+</body>
+
+</html>

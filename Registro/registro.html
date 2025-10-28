@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro Básico - Restaurante Gratitude</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Librería SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Tu archivo JS -->
+    <script src="js/registro.js"></script>
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo"><i class="fas fa-utensils"></i></div>
+            <h1>Registro Básico</h1>
+            <p>Complete el formulario para crear su cuenta</p>
+        </div>
+
+        <form id="basicForm">
+            <div class="form-grid">
+                <!-- Nombres -->
+                <div class="form-group">
+                    <label for="primerNombre" class="required">Primer Nombre</label>
+                    <input type="text" id="primerNombre" name="primerNombre" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="segundoNombre">Segundo Nombre</label>
+                    <input type="text" id="segundoNombre" name="segundoNombre">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="noSegundoNombre" name="noSegundoNombre">
+                        <label for="noSegundoNombre">No tengo segundo nombre</label>
+                    </div>
+                </div>
+
+                <!-- Apellidos -->
+                <div class="form-group">
+                    <label for="primerApellido" class="required">Primer Apellido</label>
+                    <input type="text" id="primerApellido" name="primerApellido" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="segundoApellido">Segundo Apellido</label>
+                    <input type="text" id="segundoApellido" name="segundoApellido">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="noSegundoApellido" name="noSegundoApellido">
+                        <label for="noSegundoApellido">No tengo segundo apellido</label>
+                    </div>
+                </div>
+
+                <!-- Contacto -->
+                <div class="form-group">
+                    <label for="telefono">Teléfono</label>
+                    <input type="tel" id="telefono" name="telefono" pattern="[0-9]{7,10}">
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="required">Correo Electrónico</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmEmail" class="required">Confirmar Correo Electrónico</label>
+                    <input type="email" id="confirmEmail" name="confirmEmail" required>
+                </div>
+
+                <!-- Identificación -->
+                <div class="form-group">
+                    <label for="tipoIdentificacion" class="required">Tipo de Identificación</label>
+                    <select id="tipoIdentificacion" name="tipoIdentificacion" required>
+                        <option value="">Seleccione...</option>
+                        <option value="Cedula de Ciudadania">Cedula de Ciudadania</option>
+                        <option value="Tarjeta de Identidad">Tarjeta de Identidad</option>
+                        <option value="Pasaporte">Pasaporte</option>
+                        <option value="Cédula de Extranjería">Cédula de Extranjería</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="numeroIdentificacion" class="required">Número de Identificación</label>
+                    <input type="text" id="numeroIdentificacion" name="numeroIdentificacion" required>
+                </div>
+
+                <!-- Datos personales -->
+                <div class="form-group">
+                    <label for="fechaNacimiento" class="required">Fecha de Nacimiento</label>
+                    <input type="date" id="fechaNacimiento" name="fechaNacimiento" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="genero" class="required">Género</label>
+                    <select id="genero" name="genero" required>
+                        <option value="">Seleccione...</option>
+                        <option value="Hombre">Hombre</option>
+                        <option value="Mujer">Mujer</option>
+                        <option value="No binario">No binario</option>
+                        <option value="Transgénero">Transgénero</option>
+                        <option value="Otro">Otro</option>
+                        <option value="Prefiero no decir">Prefiero no decir</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="sexo" class="required">Sexo</label>
+                    <select id="sexo" name="sexo" required>
+                        <option value="">Seleccione...</option>
+                        <option value="Masculino">Masculino</option>
+                        <option value="Femenino">Femenino</option>
+                        <option value="Intersexual">Intersexual</option>
+                    </select>
+                </div>
+
+                <!-- Rol y código -->
+                <div class="form-group">
+                    <label for="rol" class="required">Rol de Usuario</label>
+                    <select id="rol" name="rol" required>
+                        <option value="">Seleccione...</option>
+                        <option value="Usuario">Usuario</option>
+                        <option value="Empleado">Empleado</option>
+                        <option value="Administrador">Administrador</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="codigoRolGroup" style="display: none;">
+                    <label for="codigoRol" class="required">Código de Rol</label>
+                    <input type="text" id="codigoRol" name="codigoRol">
+                </div>
+
+                <!-- Ubicación -->
+                <div class="form-group">
+                    <label for="departamento" class="required">Departamento</label>
+                    <select id="departamento" name="departamento" required>
+                        <option value="">Seleccione...</option>
+                        <option value="Bolivar">Bolivar</option>
+                        <option value="Antioquia">Antioquia</option>
+                        <option value="Cundinamarca">Cundinamarca</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="ciudad" class="required">Ciudad</label>
+                    <select id="ciudad" name="ciudad" required>
+                        <option value="">Seleccione...</option>
+                        <option value="El carmen de Bolivar">El carmen de Bolivar</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="municipio" class="required">Municipio</label>
+                    <input type="text" id="municipio" name="municipio" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="tipoDireccion" class="required">Tipo de Dirección</label>
+                    <select id="tipoDireccion" name="tipoDireccion" required>
+                        <option value="">Seleccione...</option>
+                        <option value="Casa">Casa</option>
+                        <option value="Domicilio">Domicilio</option>
+
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="calle">Dirección / Calle</label>
+                    <input type="text" id="calle" name="calle">
+
+                    <label for="barrio">Barrio</label>
+                    <input type="text" id="barrio" name="barrio">
+                </div>
+
+                <!-- Contraseña -->
+                <div class="form-group">
+                    <label for="contrasena" class="required">Contraseña</label>
+                    <div class="password-container">
+                        <input type="password" id="contrasena" name="contrasena" required minlength="8">
+                        <span class="toggle-password" onclick="togglePassword('contrasena')">
+                            <i class="fas fa-eye"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmarContrasena" class="required">Confirmar Contraseña</label>
+                    <div class="password-container">
+                        <input type="password" id="confirmarContrasena" name="confirmarContrasena" required>
+                        <span class="toggle-password" onclick="togglePassword('confirmarContrasena')">
+                            <i class="fas fa-eye"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button type="submit" id="submitBtn" class="btn">Registrar</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="\Registro\js\script.js"></script>
+</body>
+
+</html>
