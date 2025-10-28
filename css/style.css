@@ -104,7 +104,7 @@ body {
 
 .btn-outline-success:hover {
     background: var(--primary-color);
-    color: #fff;
+    color: #fff;/**/
 }
 
 .btn-success {
