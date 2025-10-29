@@ -447,3 +447,68 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 document.head.appendChild(style);
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const usuario = localStorage.getItem("usuario");
+
+
+  if (!usuario) {
+
+    localStorage.setItem("redirectAfterLogin", window.location.href);
+    console.log(localStorage.getItem("redirectAfterLogin"));
+
+
+    Swal.fire({
+      icon: "warning",
+      title: "No has iniciado sesión",
+      text: "Por favor inicia sesión para acceder al menú.",
+      confirmButtonColor: "#2e7d32"
+    }).then(() => {
+      window.location.href = "../Login/index.html";
+
+    });
+  }
+});
+
+// script.js
+document.addEventListener('DOMContentLoaded', () => {
+  const toggle = document.querySelector('.profile-dropdown-toggle');
+  const dropdown = document.getElementById('profileDropdown');
+  const logoutBtn = document.getElementById('logoutBtn');
+
+  // Verificamos que existan los elementos
+  if (!toggle || !dropdown || !logoutBtn) {
+    console.warn('No se encontró toggle, dropdown o logoutBtn');
+    return;
+  }
+
+  // Toggle del dropdown
+  toggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    
+  });
+
+  // Cerrar al hacer click fuera
+  document.addEventListener('click', () => {
+    dropdown.style.display = 'none';
+  });
+
+  // Evitar que click dentro del dropdown lo cierre
+  dropdown.addEventListener('click', e => e.stopPropagation());
+
+  // Cerrar sesión
+  logoutBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    localStorage.removeItem('usuario'); // ejemplo
+    location.reload(); // opcional
+  });
+});
+
+
+
+
+
+
+

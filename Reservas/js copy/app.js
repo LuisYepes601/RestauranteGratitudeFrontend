@@ -2,7 +2,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     const usuario = localStorage.getItem("usuario");
 
-    localStorage.removeItem("usuario")
+  
     if (!usuario) {
 
         localStorage.setItem("redirectAfterLogin", window.location.href);

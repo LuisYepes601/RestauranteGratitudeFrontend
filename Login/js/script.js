@@ -15,7 +15,7 @@ function mostrarNotificacion(mensaje) {
   }, 5000);
 
 }
-console.log(localStorage.getItem("redirectAfterLogin"));
+
 
 async function inciarSesion() {
 
@@ -62,7 +62,9 @@ async function inciarSesion() {
     localStorage.setItem("usuario", JSON.stringify(datos));
 
 
+
     const redirectUrl = localStorage.getItem("redirectAfterLogin");
+
     if (redirectUrl) {
       // Si no hay, lo mandamos al home por defecto
       const destino = redirectUrl ? redirectUrl : "index.html";
@@ -73,11 +75,6 @@ async function inciarSesion() {
     }
 
 
-    console.log(localStorage.getItem("usuario"));
-
-    if (datos.credenciales.rol === "Usuario") {
-      window.location.href = "../Menu/index.html";
-    }
 
   }
 

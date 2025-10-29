@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Perfil - Restaurante Gratitude</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="\perfil\css\style.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <!-- Botón Volver al Menú -->
+    <div class="back-menu">
+      <a href="\Menu\index.html" class="btn btn-outline">
+        <i class="fas fa-arrow-left"></i> Volver al Menú
+      </a>
+    </div>
+
+    <header>
+      <h1>Mi Perfil</h1>
+    </header>
+
+    <!-- Perfil Principal -->
+    <div class="profile-card">
+      <div class="profile-header">
+        <div class="avatar-wrapper">
+          <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Foto de perfil" class="avatar"
+            id="fotoPerfil" />
+          <div class="edit-photo" onclick="editarFoto()">
+            <i class="fas fa-camera"></i>
+          </div>
+        </div>
+        <h2 class="user-name" id="nombreCompleto">Andrés Fernando</h2>
+        <div class="user-role" id="rol">Abastecedor</div>
+        <div class="status-badge" id="estadoCuenta">
+          <i class="fas fa-circle" style="font-size: 0.6rem;"></i> Activo
+        </div>
+      </div>
+
+      <div class="content">
+
+        <!-- Detalles Personales -->
+        <div class="section">
+          <div class="section-title">
+            <span><i class="fas fa-user"></i> Información Personal</span>
+            <button class="btn btn-outline" onclick="editarDatosPersonales()">
+              <i class="fas fa-edit"></i> Editar
+            </button>
+          </div>
+          <div class="grid-2">
+            <div class="info-item">
+              <span class="info-label">Nombres</span>
+              <span class="info-value" id="nombres">Andrés Fernando</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Apellidos</span>
+              <span class="info-value" id="apellidos">Johnson Pérez</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Correo</span>
+              <span class="info-value" id="correo">johnson@example.com</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Teléfono</span>
+              <span class="info-value" id="telefono">(213) 555-1234</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Fecha de Nacimiento</span>
+              <span class="info-value" id="fechaNacimiento">1 de enero de 1987</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Sexo / Género</span>
+              <span class="info-value" id="sexoGenero">Masculino / Hombre</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dirección -->
+        <div class="section">
+          <div class="section-title">
+            <span><i class="fas fa-map-marker-alt"></i> Dirección</span>
+            <button class="btn btn-outline" onclick="editarDireccion()">
+              <i class="fas fa-edit"></i> Editar
+            </button>
+          </div>
+          <div class="grid-2">
+            <div class="info-item">
+              <span class="info-label">País</span>
+              <span class="info-value" id="pais">Estados Unidos</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Departamento / Estado</span>
+              <span class="info-value" id="departamento">California</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Ciudad</span>
+              <span class="info-value" id="ciudad">Los Ángeles</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Municipio / Barrio</span>
+              <span class="info-value" id="municipioBarrio">Hollywood</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Tipo de Dirección</span>
+              <span class="info-value" id="tipoDireccion">Residencial</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Identificación -->
+        <div class="section">
+          <div class="section-title">
+            <span><i class="fas fa-id-card"></i> Identificación</span>
+            <button class="btn btn-outline" onclick="editarIdentificacion()">
+              <i class="fas fa-edit"></i> Editar
+            </button>
+          </div>
+          <div class="grid-2">
+            <div class="info-item">
+              <span class="info-label">Tipo</span>
+              <span class="info-value" id="tipoIdentificacion">Cédula de Ciudadanía</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Número</span>
+              <span class="info-value" id="numeroIdentificacion">123456789</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Preferencias -->
+        <div class="section">
+          <div class="section-title">
+            <span><i class="fas fa-heart"></i> Preferencias</span>
+          </div>
+          <div class="preferences">
+            <div class="pref-item">
+              <i class="fas fa-bell"></i>
+              <div>Notificaciones por email</div>
+            </div>
+            <div class="pref-item">
+              <i class="fas fa-moon"></i>
+              <div>Modo oscuro</div>
+            </div>
+            <div class="pref-item">
+              <i class="fas fa-language"></i>
+              <div>Idioma: Español</div>
+            </div>
+            <div class="pref-item">
+              <i class="fas fa-chart-line"></i>
+              <div>Reportes semanales</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Seguridad -->
+        <div class="section">
+          <div class="section-title">
+            <span><i class="fas fa-shield-alt"></i> Seguridad</span>
+          </div>
+          <div class="security-item">
+            <div>
+              <div style="font-weight:600;">Cambiar contraseña</div>
+              <div class="info-label">Último cambio hace 3 meses</div>
+            </div>
+            <button class="btn" onclick="cambiarContrasena()">
+              <i class="fas fa-key"></i> Cambiar
+            </button>
+          </div>
+          <div class="security-item">
+            <div>
+              <div style="font-weight:600;">Autenticación de dos factores (2FA)</div>
+              <div class="info-label">Protege tu cuenta con un código adicional</div>
+            </div>
+            <div class="toggle-2fa" id="toggle2FA" onclick="toggle2FA()"></div>
+          </div>
+          <div class="security-item">
+            <div>
+              <div style="font-weight:600;">Último inicio de sesión</div>
+              <div class="info-label">28 de octubre de 2025, 14:30</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MODAL EDITAR INFORMACIÓN PERSONAL -->
+  <div id="modalEditarPersonal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Editar Información Personal</h3>
+        <span class="close" onclick="cerrarModal()">&times;</span>
+      </div>
+      <form id="formEditarPersonal">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Primer Nombre</label>
+            <input type="text" id="edit_primerNombre" required />
+          </div>
+          <div class="form-group">
+            <label>Segundo Nombre</label>
+            <input type="text" id="edit_segundoNombre" />
+          </div>
+          <div class="form-group">
+            <label>Primer Apellido</label>
+            <input type="text" id="edit_primerApellido" required />
+          </div>
+          <div class="form-group">
+            <label>Segundo Apellido</label>
+            <input type="text" id="edit_segundoApellido" />
+          </div>
+          <div class="form-group">
+            <label>Correo</label>
+            <input type="email" id="edit_correo" />
+          </div>
+          <div class="form-group">
+            <label>Teléfono</label>
+            <input type="tel" id="edit_telefono" required />
+          </div>
+          <div class="form-group">
+            <label>Sexo</label>
+            <select id="edit_sexo">
+              <option value="Masculino">Masculino</option>
+              <option value="Femenino">Femenino</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Género</label>
+            <select id="edit_genero">
+              <option value="Masculino">Masculino</option>
+              <option value="Femenino">Femenino</option>
+              <option value="No binario">No binario</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="cerrarModal()">Cancelar</button>
+          <button type="submit" class="btn">Guardar Cambios</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL CAMBIAR CONTRASEÑA -->
+  <div id="modalCambiarContrasena" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Cambiar Contraseña</h3>
+        <span class="close" onclick="cerrarModalContrasena()">&times;</span>
+      </div>
+      <form id="formCambiarContrasena">
+        <div class="form-group">
+          <label>Contraseña Actual</label>
+          <input type="password" id="contrasenaActual" required />
+        </div>
+        <div class="form-group">
+          <label>Nueva Contraseña</label>
+          <input type="password" id="contrasenaNueva" required minlength="6" />
+        </div>
+        <div class="form-group">
+          <label>Confirmar Nueva Contraseña</label>
+          <input type="password" id="confirmarContrasena" required minlength="6" />
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="cerrarModalContrasena()">Cancelar</button>
+          <button type="submit" class="btn">Cambiar Contraseña</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL EDITAR FOTO DE PERFIL -->
+  <div id="modalEditarFoto" class="modal" style="display: none;">
+    <div class="modal-content modal-foto">
+      <div class="modal-header">
+        <h3>Editar Foto de Perfil</h3>
+        <span class="close" onclick="cerrarModalFoto()">×</span>
+      </div>
+      <div class="modal-body">
+        <div class="preview-container">
+          <img id="previewFoto" src="" alt="Vista previa" class="avatar-preview" />
+          <label for="fotoInput" class="camera-btn">
+            <i class="fas fa-camera"></i>
+          </label>
+        </div>
+        <label for="fotoInput" class="upload-area" id="uploadArea">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <p id="uploadText">Arrastra una imagen aquí o haz clic para seleccionar</p>
+          <input type="file" id="fotoInput" accept="image/*" />
+        </label>
+        <small class="upload-info">JPG, PNG, GIF • Máx. 5MB • Recomendado: 400×400px</small>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" onclick="cerrarModalFoto()">Cancelar</button>
+        <button type="button" class="btn" id="btnSubirFoto" disabled>Subir Foto</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL EDITAR DIRECCIÓN -->
+  <div id="modalEditarDireccion" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Editar Dirección</h3>
+        <span class="close" onclick="cerrarModalDireccion()">×</span>
+      </div>
+      <form id="formEditarDireccion">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>País</label>
+            <input type="text" id="edit_pais" required />
+          </div>
+          <div class="form-group">
+            <label>Departamento</label>
+            <input type="text" id="edit_departamento" required />
+          </div>
+          <div class="form-group">
+            <label>Ciudad</label>
+            <input type="text" id="edit_ciudad" required />
+          </div>
+          <div class="form-group">
+            <label>Municipio</label>
+            <input type="text" id="edit_municipio" required />
+          </div>
+          <div class="form-group">
+            <label>Barrio</label>
+            <input type="text" id="edit_barrio" required />
+          </div>
+          <div class="form-group">
+            <label>Tipo de Dirección</label>
+            <select id="edit_tipoDireccion">
+              <option value="Residencial">Residencial</option>
+              <option value="Comercial">Comercial</option>
+              <option value="Trabajo">Trabajo</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="cerrarModalDireccion()">Cancelar</button>
+          <button type="submit" class="btn">Guardar Dirección</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL EDITAR IDENTIFICACIÓN -->
+  <div id="modalEditarIdentificacion" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Editar Identificación</h3>
+        <span class="close" onclick="cerrarModalIdentificacion()">×</span>
+      </div>
+      <form id="formEditarIdentificacion">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="edit_tipoIdentificacion">Tipo de Identificación</label>
+            <select id="edit_tipoIdentificacion" required>
+              <option value="Cedula de ciudadania">Cédula de ciudadanía</option>
+              <option value="Cedula de extranjería">Cédula de extranjería</option>
+              <option value="Pasaporte">Pasaporte</option>
+              <option value="Tarjeta de identidad">Tarjeta de identidad</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="edit_numeroIdentificacion">Número de Identificación</label>
+            <input type="text" id="edit_numeroIdentificacion" placeholder="Ej: 1050276424" maxlength="15"
+              pattern="[0-9]+" title="Solo números" required />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="cerrarModalIdentificacion()">Cancelar</button>
+          <button type="submit" class="btn">Guardar Identificación</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="\perfil\js\gestionPerfil.js"></script>
+</body>
+
+</html>

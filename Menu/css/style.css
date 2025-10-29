@@ -2,12 +2,18 @@
    Paleta verdosa - variables
    ======================== */
 :root {
-  --verde-oscuro: #0c361f;   /* navbar / acentos */
-  --verde-medio: #2e7d32;    /* botones */
-  --verde-claro: #e4ffdc;    /* fondos claros */
-  --verde-suave: #f4f9f4;    /* tarjetas */
-  --gris-suave: #d9e3d4;     /* bordes / separadores */
-  --gris-texto: #2f4f2f;     /* texto principal */
+  --verde-oscuro: #0c361f;
+  /* navbar / acentos */
+  --verde-medio: #2e7d32;
+  /* botones */
+  --verde-claro: #e4ffdc;
+  /* fondos claros */
+  --verde-suave: #f4f9f4;
+  /* tarjetas */
+  --gris-suave: #d9e3d4;
+  /* bordes / separadores */
+  --gris-texto: #2f4f2f;
+  /* texto principal */
   --footer: #0c361f;
 
   --shadow-suave: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -26,10 +32,16 @@ body {
   line-height: 1.6;
   margin: 0;
   padding: 0;
-  padding-top: 70px; /* Altura del navbar fijo */
+  padding-top: 70px;
+  /* Altura del navbar fijo */
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: 600;
   color: var(--verde-oscuro);
   margin-bottom: 0.5rem;
@@ -61,7 +73,8 @@ a:hover {
    ======================== */
 aside {
   position: fixed;
-  top: 75px; /* debajo del navbar */
+  top: 75px;
+  /* debajo del navbar */
   left: 0;
   width: 250px;
   height: calc(100% - 75px);
@@ -72,7 +85,8 @@ aside {
   box-shadow: var(--shadow-suave);
 }
 
-.sidebar h5, .sidebar h6 {
+.sidebar h5,
+.sidebar h6 {
   color: var(--verde-oscuro);
 }
 
@@ -103,7 +117,8 @@ aside {
    Main / Productos
    ======================== */
 main {
-  margin-left: 250px; /* mismo ancho que el aside */
+  margin-left: 250px;
+  /* mismo ancho que el aside */
   padding: 20px;
 }
 
@@ -219,16 +234,32 @@ main {
   transform: scale(0.96);
 }
 
-.btn-primary, .btn-verde {
+.btn-primary,
+.btn-verde {
   background: var(--verde-medio);
   border: none;
   color: white;
 }
 
-.btn-primary:hover, .btn-verde:hover {
+.btn-primary:hover,
+.btn-verde:hover {
   background: var(--verde-oscuro);
   color: white;
 }
+
+.profile-dropdown {
+  display: none;
+  transition: all 0.3s ease;
+  opacity: 0;
+}
+
+.profile-dropdown.show {
+  display: block;
+  opacity: 1;
+}
+
+
+
 
 /* ========================
    Footer
