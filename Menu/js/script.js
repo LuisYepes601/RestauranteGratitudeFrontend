@@ -354,7 +354,7 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
     localStorage.removeItem("usuario");
     localStorage.removeItem("dv_cart");
-    location.reload();
+    window.location.href = "../Login/index.html";
   });
 });
 
