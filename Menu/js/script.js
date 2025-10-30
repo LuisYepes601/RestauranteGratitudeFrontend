@@ -5,7 +5,7 @@
 // Variables globales
 let PRODUCTS = [];
 let cart = JSON.parse(localStorage.getItem("dv_cart") || "[]");
-let filteredProducts = [];
+let przedstawiaProducts = [];
 
 /* ------------------ Helpers ------------------ */
 const currency = (v) => "$" + Number(v).toFixed(2);
@@ -66,7 +66,7 @@ async function cargarProductos() {
   }
 }
 
-/* ------------------ Render categorías (estáticas) ------------------ */
+/* ------------------ Render categorías ------------------ */
 function renderCategories() {
   document.querySelectorAll(".category-btn").forEach(b => b.classList.remove("active"));
   const todosBtn = document.querySelector(".category-btn[onclick*='Todos']");
@@ -84,7 +84,7 @@ function filterByCategory(selected) {
   applyFiltersAndSort();
 }
 
-/* ------------------ Render productos - CARD RESPONSIVO ------------------ */
+/* ------------------ Render productos ------------------ */
 function renderProducts() {
   const grid = document.getElementById("productsGrid");
   grid.innerHTML = "";
@@ -118,18 +118,16 @@ function renderProducts() {
   });
 }
 
-/* ------------------ Aplicar filtros y ordenamiento CON ALERTA ------------------ */
+/* ------------------ Aplicar filtros y ordenamiento ------------------ */
 function applyFiltersAndSort() {
   let temp = PRODUCTS.slice();
 
-  // CATEGORÍA
   const activeBtn = document.querySelector(".category-btn.active");
   const selectedCategory = activeBtn ? activeBtn.innerText.trim() : "Todos";
   if (selectedCategory !== "Todos") {
     temp = temp.filter(p => p.category === selectedCategory);
   }
 
-  // BÚSQUEDA
   const query = document.getElementById("searchInput")?.value.toLowerCase().trim();
   if (query) {
     temp = temp.filter(p =>
@@ -138,7 +136,6 @@ function applyFiltersAndSort() {
     );
   }
 
-  // PRECIO CON ALERTA
   const minInput = document.getElementById("minPrice");
   const maxInput = document.getElementById("maxPrice");
   const min = parseFloat(minInput?.value) || 0;
@@ -159,7 +156,6 @@ function applyFiltersAndSort() {
     temp = temp.filter(p => p.price >= min && p.price <= max);
   }
 
-  // ORDEN
   const sort = document.getElementById("sortSelect")?.value;
   if (sort === "price-asc") temp.sort((a, b) => a.price - b.price);
   if (sort === "price-desc") temp.sort((a, b) => b.price - a.price);
@@ -301,7 +297,7 @@ async function init() {
     window.location.href = "/checkout/index.html";
   });
 
-  // === PERFIL DESDE LOCALSTORAGE (NOMBRE + ROL) ===
+  // === PERFIL DESDE LOCALSTORAGE ===
   const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
   const nombre = usuario?.credenciales?.nombre || "Invitado";
   const rol = usuario?.credenciales?.rol || "Cliente";
@@ -362,16 +358,14 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// === ESTILOS DINÁMICOS (TRANSICIÓN + PERFIL MODERNO) ===
+// === ESTILOS DINÁMICOS ===
 const style = document.createElement("style");
 style.textContent = `
-  /* ANIMACIONES GENERALES */
   .fade-in { opacity: 0; transform: scale(0.95); animation: fadeIn 0.4s forwards; }
   .fade-out { animation: fadeOut 0.3s forwards; }
   @keyframes fadeIn { to { opacity: 1; transform: scale(1); } }
   @keyframes fadeOut { to { opacity: 0; transform: scale(0.95); } }
 
-  /* PERFIL MODERNO */
   .profile-toggle { transition: opacity 0.2s; cursor: pointer; }
   .profile-toggle:hover { opacity: 0.9; }
 
@@ -409,15 +403,12 @@ style.textContent = `
     color: #d32f2f !important;
   }
 
-  /* RESPONSIVE */
   @media (max-width: 576px) {
     #productModal .modal-dialog { margin: 1rem; max-width: calc(100% - 2rem); }
     #productModal img { max-height: 140px !important; }
     #profileDropdown { width: 200px; right: 10px !important; }
     .avatar-circle { width: 34px; height: 34px; font-size: 1rem; }
   }
-
-  .text-break { word-break: break-word; hyphens: auto; }
 `;
 document.head.appendChild(style);
 

@@ -30,7 +30,6 @@ body {
   margin: 0 auto;
 }
 
-/* Botón Volver al Menú */
 .back-menu {
   margin-bottom: 1.5rem;
   text-align: left;
@@ -288,9 +287,6 @@ header h1 {
   .back-menu { text-align: center; }
 }
 
-/* ==============================================================
-   MODAL EDITAR INFORMACIÓN PERSONAL
-   ============================================================== */
 .modal {
   display: none;
   position: fixed;
@@ -387,7 +383,6 @@ form {
   border-top: 1px solid var(--border);
 }
 
-/* Animaciones */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -398,9 +393,6 @@ form {
   to { transform: translateY(0); opacity: 1; }
 }
 
-/* ==============================================================
-   MODAL CAMBIAR CONTRASEÑA
-   ============================================================== */
 #modalCambiarContrasena .modal-content {
   max-width: 500px;
 }
@@ -410,153 +402,85 @@ form {
 }
 
 #modalCambiarContrasena input[type="password"] {
-  font-family: 'Inter', sans-serif; /* Evita mostrar tipo de input */
+  font-family: 'Inter', sans-serif;
 }
 
-/* ==============================================================
-   MODAL FOTO DE PERFIL – RESPONSIVO + CLIC EN ÁREA
-   ============================================================== */
-.modal-foto {
-  max-width: 420px;
-  width: 90%;
-  margin: 1rem auto;
-  border-radius: 18px;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
 }
 
-#modalEditarFoto .modal-header {
-  background: #2e7d32;
-  color: white;
-  padding,padding: 1rem 1.2rem;
-  font-weight: 600;
-  border-radius: 18px 18px 0 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-#modalEditarFoto .modal-header h3 {
-  margin: 0;
-  font-size: 1.1rem;
-}
-
-#modalEditarFoto .close {
-  font-size: 1.5rem;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-#modalEditarFoto .modal-body {
-  padding: 1.5rem 1.2rem;
-  text-align: center;
-}
-
-/* PREVIEW */
-.preview-container {
-  position: relative;
-  display: inline-block;
-  margin-bottom: 1.2rem;
-}
-
-.avatar-preview {
-  width: 110px;
-  height: 110px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 4px solid white;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
-  transition: transform 0.3s ease;
-}
-
-.camera-btn {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  background: #2e7d32;
-  color: white;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-  transition: all 0.3s ease;
-}
-
-.camera-btn:hover {
-  background: #1b5e20;
-  transform: scale(1.1);
-}
-
-/* ÁREA DE SUBIDA – CLIC = SELECCIONAR */
-.upload-area {
-  display: block;
-  border: 2px dashed #a5d6a7;
+.stat-card {
+  background: white;
+  padding: 1rem;
   border-radius: 14px;
-  padding: 1.8rem 1rem;
-  background: #f1f8e9;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin: 0 auto 1rem;
-  max-width: 100%;
+  box-shadow: var(--shadow);
+  text-align: center;
+  transition: var(--transition);
 }
 
-.upload-area:hover,
-.upload-area.drag-over {
-  border-color: #2e7d32;
-  background: #e8f5e9;
-  transform: translateY(-2px);
+.stat-card:hover {
+  transform: translateY(-3px);
 }
 
-.upload-area i {
-  font-size: 2.4rem;
-  color: #2e7d32;
+.stat-card i {
+  font-size: 1.8rem;
+  color: var(--primary-color);
   margin-bottom: 0.5rem;
 }
 
-#uploadText {
-  margin: 0.4rem 0 0;
-  color: #4caf50;
-  font-weight: 500;
-  font-size: 0.95rem;
+.stat-number {
+  font-size: 1.4rem;
+  font-weight: 700;
 }
 
-#fotoInput {
-  display: none;
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--text-light);
 }
 
-.upload-info {
-  display: block;
-  color: #666;
-  font-size: 0.82rem;
-  line-height: 1.4;
-}
-
-/* BOTONES */
-#modalEditarFoto .modal-footer {
-  padding: 1rem 1.2rem;
+.skeleton-list {
   display: flex;
-  justify-content: flex-end;
-  gap: 0.8rem;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
-#btnSubirFoto {
-  min-width: 110px;
+.skeleton-item {
+  height: 60px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 12px;
 }
 
-#btnSubirFoto:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
-/* RESPONSIVE */
-@media (max-width: 480px) {
-  .modal-foto { width: 95%; }
-  .avatar-preview { width: 100px; height: 100px; }
-  .upload-area { padding: 1.5rem 0.8rem; }
-  #uploadText { font-size: 0.9rem; }
+.order-mini {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: var(--light-bg);
+  border-radius: 12px;
+  font-size: 0.9rem;
 }
 
+#cropperContainer {
+  max-height: 300px;
+  overflow: hidden;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+}
+
+#cropperImage {
+  max-width: 100%;
+}
+
+@media (max-width: 576px) {
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .stat-card { padding: 0.8rem; }
+}

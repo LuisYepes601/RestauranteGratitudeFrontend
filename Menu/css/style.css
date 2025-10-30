@@ -16,7 +16,7 @@ body {
 .sidebar {
   background: white;
   border-right: 1px solid #dee2e6;
-  height: calc(100vh - 76px);
+  height: infinity;
   position: sticky;
   top: 76px;
   overflow-y: auto;

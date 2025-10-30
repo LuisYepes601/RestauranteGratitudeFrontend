@@ -54,6 +54,15 @@ function renderCart() {
 }
 
 async function crearPedido() {
+
+    Swal.fire({
+        title: 'Realizando pedido...',
+        text: 'Por favor espera un momento',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading(); // 
+        }
+    });
     const detalles = cart.map(item => ({
         id_producto: parseInt(item.id),
         cantidad: item.qty,
@@ -68,6 +77,7 @@ async function crearPedido() {
         id_usuario: usuario.id,
         detalles: detalles
     };
+
 
     const response = await fetch("http://localhost:8080/pedido/crear", {
         method: "POST",

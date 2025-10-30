@@ -1,9 +1,11 @@
 /* ==============================================================
-   gestionPerfil.js – PERFIL + FOTO + PERSONAL + CONTRASEÑA + DIRECCIÓN + IDENTIFICACIÓN
+   gestionPerfil.js – PERFIL COMPLETO + MEJORAS (TODO EN UNO)
    ============================================================== */
 
 let datosUsuario = {};
 let archivoSeleccionado = null;
+let cropper = null;
+let archivoFoto = null;
 
 function formatearFecha(fechaISO) {
   if (!fechaISO) return "Sin información";
@@ -37,6 +39,7 @@ async function obtenerPerfil() {
     const data = await response.json();
     datosUsuario = data;
     cargarPerfil(data);
+    await cargarMejoras(); // ← Carga estadísticas y pedidos
   } catch (error) {
     console.error("Error al cargar perfil:", error);
     Swal.fire({
@@ -85,117 +88,261 @@ function cargarPerfil(data) {
 }
 
 /* ==============================================================
-   MODAL: EDITAR FOTO
+   MEJORAS: ESTADÍSTICAS + PEDIDOS
    ============================================================== */
-function editarFoto() {
-  const modal = document.getElementById("modalEditarFoto");
-  const preview = document.getElementById("previewFoto");
-  const fotoUrl = safe(datosUsuario.fotoPerfil);
-  const defaultUrl = "https://randomuser.me/api/portraits/men/32.jpg";
+async function cargarMejoras() {
+  const container = document.getElementById("ultimosPedidos");
 
-  if (!modal || !preview) return;
-
-  preview.src = fotoUrl !== "Sin información" ? fotoUrl : defaultUrl;
-  const input = document.getElementById("fotoInput");
-  const btn = document.getElementById("btnSubirFoto");
-  const text = document.getElementById("uploadText");
-
-  if (input) input.value = "";
-  if (btn) btn.disabled = true;
-  if (text) text.textContent = "Arrastra una imagen aquí o haz clic para seleccionar";
-
-  modal.style.display = "block";
-}
-
-function cerrarModalFoto() {
-  const modal = document.getElementById("modalEditarFoto");
-  if (modal) modal.style.display = "none";
-  archivoSeleccionado = null;
-}
-
-document.addEventListener("click", function (event) {
-  const modal = document.getElementById("modalEditarFoto");
-  if (event.target === modal) cerrarModalFoto();
-});
-
-/* ==============================================================
-   MANEJO DE FOTO
-   ============================================================== */
-document.addEventListener("DOMContentLoaded", () => {
-  const fotoInput = document.getElementById("fotoInput");
-  const btnSubirFoto = document.getElementById("btnSubirFoto");
-  const previewFoto = document.getElementById("previewFoto");
-  const uploadArea = document.getElementById("uploadArea");
-  const uploadText = document.getElementById("uploadText");
-
-  if (!fotoInput || !btnSubirFoto || !previewFoto || !uploadArea || !uploadText) return;
-
-  fotoInput.addEventListener("change", (e) => {
-    if (e.target.files[0]) validarYPrevisualizar(e.target.files[0]);
-  });
-
-  uploadArea.addEventListener("dragover", (e) => {
-    e.preventDefault();
-    uploadArea.classList.add("drag-over");
-  });
-  uploadArea.addEventListener("dragleave", () => uploadArea.classList.remove("drag-over"));
-  uploadArea.addEventListener("drop", (e) => {
-    e.preventDefault();
-    uploadArea.classList.remove("drag-over");
-    const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith("image/")) {
-      fotoInput.files = e.dataTransfer.files;
-      validarYPrevisualizar(file);
+  try {
+    const usuario = JSON.parse(localStorage.getItem("usuario"));
+    const id = usuario?.credenciales?.id;
+    if (!id) {
+      container.innerHTML = `<p class="text-muted text-center">No hay usuario</p>`;
+      return;
     }
-  });
 
-  function validarYPrevisualizar(file) {
-    if (!file.type.startsWith("image/")) return Swal.fire("Error", "Solo imágenes", "error");
-    if (file.size > 5 * 1024 * 1024) return Swal.fire("Error", "Máximo 5MB", "error");
+    const pedidosRes = await fetch(`http://localhost:8080/pedidos/usuario/${id}?limit=3`);
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      previewFoto.src = e.target.result;
-      archivoSeleccionado = file;
-      btnSubirFoto.disabled = false;
-      uploadText.textContent = file.name;
-    };
-    reader.readAsDataURL(file);
+    if (!pedidosRes.ok) {
+      container.innerHTML = `<p class="text-muted text-center">No hay pedidos recientes</p>`;
+      return;
+    }
+
+    const pedidos = await pedidosRes.json();
+
+    if (!pedidos || pedidos.length === 0) {
+      container.innerHTML = `<p class="text-muted text-center">No hay pedidos recientes</p>`;
+      return;
+    }
+
+    // Cargar estadísticas
+    cargarEstadisticas(pedidos);
+
+    // Cargar pedidos
+    cargarUltimosPedidos(pedidos);
+
+  } catch (err) {
+  
+    container.innerHTML = `<p class="text-muted text-center">No hay pedidos recientes</p>`;
+  }
+}
+
+function cargarEstadisticas(pedidos) {
+  const total = pedidos.length;
+  const nivel = total > 20 ? "VIP" : total > 10 ? "Frecuente" : "Novato";
+  document.getElementById("totalPedidos").textContent = total;
+  document.getElementById("nivelUsuario").textContent = nivel;
+  document.getElementById("notificaciones").textContent = Math.floor(Math.random() * 5);
+}
+
+function cargarUltimosPedidos(pedidos) {
+  const container = document.getElementById("ultimosPedidos");
+  if (pedidos.length === 0) {
+    container.innerHTML = `<p class="text-muted text-center">Sin pedidos recientes</p>`;
+    return;
   }
 
-  btnSubirFoto.addEventListener("click", async () => {
-    if (!archivoSeleccionado) return;
+  container.innerHTML = pedidos.map(p => `
+    <div class="order-mini">
+      <div>
+        <div class="fw-bold">#${p.id}</div>
+        <small class="text-muted">${new Date(p.fecha).toLocaleDateString()}</small>
+      </div>
+      <div class="text-end">
+        <div>$${p.total?.toFixed(2) || '0.00'}</div>
+        <small class="text-success">${p.estado || 'Pendiente'}</small>
+      </div>
+    </div>
+  `).join("");
+}
 
-    Swal.fire({ title: "Subiendo...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+/* ==============================================================
+   CROPPER.JS - FOTO RECORTADA
+   ============================================================== */
+function abrirCropper() {
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = "image/*";
+  input.onchange = e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      document.getElementById("cropperImage").src = ev.target.result;
+      document.getElementById("modalCropper").style.display = "block";
+      if (cropper) cropper.destroy();
+      cropper = new Cropper(document.getElementById("cropperImage"), {
+        aspectRatio: 1,
+        viewMode: 1,
+        autoCropArea: 0.8,
+      });
+      archivoFoto = file;
+    };
+    reader.readAsDataURL(file);
+  };
+  input.click();
+}
+
+function cerrarCropper() {
+  document.getElementById("modalCropper").style.display = "none";
+  if (cropper) cropper.destroy();
+}
+
+async function guardarFotoRecortada() {
+  if (!cropper || !archivoFoto) return;
+  const canvas = cropper.getCroppedCanvas({ width: 400, height: 400 });
+  canvas.toBlob(async blob => {
+    const formData = new FormData();
+    formData.append("imagen", blob, "perfil.jpg");
+
+    Swal.fire({ title: "Subiendo...", didOpen: () => Swal.showLoading() });
 
     try {
-      const usuario = JSON.parse(localStorage.getItem("usuario"));
-      const id = usuario?.credenciales?.id;
-      if (!id) throw new Error("ID no encontrado");
-
-      const formData = new FormData();
-      formData.append("imagen", archivoSeleccionado);
-
-      const response = await fetch(`http://localhost:8080/perfil/foto/agregar/${id}`, {
+      const id = JSON.parse(localStorage.getItem("usuario"))?.credenciales?.id;
+      const res = await fetch(`http://localhost:8080/perfil/foto/agregar/${id}`, {
         method: "POST",
         body: formData
       });
-
-      if (!response.ok) throw new Error(await response.text() || "Error");
-
-      await Swal.fire({ icon: "success", title: "¡Foto subida!", timer: 2000, timerProgressBar: true });
-      await obtenerPerfil();
-      cerrarModalFoto();
-
-    } catch (error) {
-      Swal.fire({ icon: "error", title: "Error", text: error.message });
+      if (!res.ok) throw new Error("Error al subir");
+      await Swal.fire("¡Listo!", "Foto actualizada", "success");
+      document.getElementById("fotoPerfil").src = URL.createObjectURL(blob);
+      cerrarCropper();
+    } catch (err) {
+      Swal.fire("Error", err.message, "error");
     }
   });
-});
+}
 
 /* ==============================================================
-   MODAL: EDITAR DIRECCIÓN
+   MODO OSCURO
    ============================================================== */
+function toggleDarkMode() {
+  document.body.classList.toggle("dark-mode");
+  const isDark = document.body.classList.contains("dark-mode");
+  localStorage.setItem("darkMode", isDark);
+}
+
+// Aplicar modo oscuro guardado
+if (localStorage.getItem("darkMode") === "true") {
+  document.body.classList.add("dark-mode");
+}
+
+/* ==============================================================
+   MODALES ORIGINALES (sin cambios)
+   ============================================================== */
+function editarDatosPersonales() {
+  document.getElementById("edit_primerNombre").value = safe(datosUsuario.primerNombre);
+  document.getElementById("edit_segundoNombre").value = safe(datosUsuario.segundoNombre);
+  document.getElementById("edit_primerApellido").value = safe(datosUsuario.primerApellido);
+  document.getElementById("edit_segundoApellido").value = safe(datosUsuario.segundoApellido);
+  document.getElementById("edit_correo").value = safe(datosUsuario.correo, "");
+  document.getElementById("edit_telefono").value = safe(datosUsuario.telefono);
+  document.getElementById("edit_sexo").value = safe(datosUsuario.sexo, "Masculino");
+  document.getElementById("edit_genero").value = safe(datosUsuario.genero, "Masculino");
+
+  document.getElementById("modalEditarPersonal").style.display = "block";
+}
+
+function cerrarModal() {
+  document.getElementById("modalEditarPersonal").style.display = "none";
+}
+
+window.onclick = function (event) {
+  const modalPersonal = document.getElementById("modalEditarPersonal");
+  if (event.target === modalPersonal) cerrarModal();
+};
+
+document.getElementById("formEditarPersonal").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const datosEditados = {
+    primerNombre: document.getElementById("edit_primerNombre").value.trim(),
+    segundoNombre: document.getElementById("edit_segundoNombre").value.trim(),
+    primerApellido: document.getElementById("edit_primerApellido").value.trim(),
+    segundoApellido: document.getElementById("edit_segundoApellido").value.trim(),
+    correo: document.getElementById("edit_correo").value.trim() || null,
+    telefono: document.getElementById("edit_telefono").value.trim(),
+    sexo: document.getElementById("edit_sexo").value,
+    genero: document.getElementById("edit_genero").value,
+  };
+
+  Swal.fire({ title: "Guardando...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+  try {
+    const usuario = JSON.parse(localStorage.getItem("usuario"));
+    const id = usuario?.credenciales?.id;
+    if (!id) throw new Error("No se encontró el ID del usuario");
+
+    const response = await fetch(`http://localhost:8080/perfil/editar/informacionPersonal/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(datosEditados),
+    });
+
+    if (!response.ok) throw new Error(await response.text() || "Error");
+
+    await Swal.fire({ icon: "success", title: "¡Guardado!", timer: 2000, timerProgressBar: true });
+    await obtenerPerfil();
+    cerrarModal();
+
+  } catch (error) {
+    Swal.fire({ icon: "error", title: "Error", text: error.message });
+  }
+});
+
+function cambiarContrasena() {
+  document.getElementById("contrasenaActual").value = "";
+  document.getElementById("contrasenaNueva").value = "";
+  document.getElementById("confirmarContrasena").value = "";
+  document.getElementById("modalCambiarContrasena").style.display = "block";
+}
+
+function cerrarModalContrasena() {
+  document.getElementById("modalCambiarContrasena").style.display = "none";
+}
+
+document.addEventListener("click", function (event) {
+  const modalContrasena = document.getElementById("modalCambiarContrasena");
+  if (event.target === modalContrasena) cerrarModalContrasena();
+});
+
+document.getElementById("formCambiarContrasena").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const actual = document.getElementById("contrasenaActual").value;
+  const nueva = document.getElementById("contrasenaNueva").value;
+  const confirmar = document.getElementById("confirmarContrasena").value;
+  const usuario = JSON.parse(localStorage.getItem("usuario"));
+
+  if (!actual || !nueva || !confirmar) return Swal.fire("Warning", "Completa todos los campos", "warning");
+  if (nueva.length < 6) return Swal.fire("Warning", "Mínimo 6 caracteres", "warning");
+  if (nueva !== confirmar) return Swal.fire("Error", "No coinciden", "error");
+
+  const datos = {
+    email: safe(datosUsuario.correo, usuario.credenciales.correo),
+    contraseaActual: actual,
+    contraseñaNueva: nueva
+  };
+
+  Swal.fire({ title: "Cambiando...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+  try {
+    const response = await fetch("http://localhost:8080/cambiarContraseña/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(datos),
+    });
+
+    if (!response.ok) throw new Error(await response.text() || "Error");
+
+    await Swal.fire({ icon: "success", title: "¡Cambiada!", text: "Vuelve a iniciar sesión.", timer: 3000 });
+    cerrarModalContrasena();
+
+  } catch (error) {
+    Swal.fire({ icon: "error", title: "Error", text: error.message });
+  }
+});
+
 function editarDireccion() {
   document.getElementById("edit_pais").value = safe(datosUsuario.pais);
   document.getElementById("edit_departamento").value = safe(datosUsuario.departamento);
@@ -252,9 +399,6 @@ document.getElementById("formEditarDireccion").addEventListener("submit", async 
   }
 });
 
-/* ==============================================================
-   MODAL: EDITAR IDENTIFICACIÓN
-   ============================================================== */
 function editarIdentificacion() {
   document.getElementById("edit_tipoIdentificacion").value = safe(datosUsuario.tipoIdertificacion);
   document.getElementById("edit_numeroIdentificacion").value = safe(datosUsuario.numeroIdentificacion);
@@ -309,133 +453,6 @@ document.getElementById("formEditarIdentificacion").addEventListener("submit", a
 });
 
 /* ==============================================================
-   MODAL: EDITAR PERSONAL
-   ============================================================== */
-function editarDatosPersonales() {
-  document.getElementById("edit_primerNombre").value = safe(datosUsuario.primerNombre);
-  document.getElementById("edit_segundoNombre").value = safe(datosUsuario.segundoNombre);
-  document.getElementById("edit_primerApellido").value = safe(datosUsuario.primerApellido);
-  document.getElementById("edit_segundoApellido").value = safe(datosUsuario.segundoApellido);
-  document.getElementById("edit_correo").value = safe(datosUsuario.correo, "");
-  document.getElementById("edit_telefono").value = safe(datosUsuario.telefono);
-  document.getElementById("edit_sexo").value = safe(datosUsuario.sexo, "Masculino");
-  document.getElementById("edit_genero").value = safe(datosUsuario.genero, "Masculino");
-
-  document.getElementById("modalEditarPersonal").style.display = "block";
-}
-
-function cerrarModal() {
-  document.getElementById("modalEditarPersonal").style.display = "none";
-}
-
-window.onclick = function (event) {
-  const modalPersonal = document.getElementById("modalEditarPersonal");
-  if (event.target === modalPersonal) cerrarModal();
-};
-
-/* ==============================================================
-   MODAL: CAMBIAR CONTRASEÑA
-   ============================================================== */
-function cambiarContrasena() {
-  document.getElementById("contrasenaActual").value = "";
-  document.getElementById("contrasenaNueva").value = "";
-  document.getElementById("confirmarContrasena").value = "";
-  document.getElementById("modalCambiarContrasena").style.display = "block";
-}
-
-function cerrarModalContrasena() {
-  document.getElementById("modalCambiarContrasena").style.display = "none";
-}
-
-document.addEventListener("click", function (event) {
-  const modalContrasena = document.getElementById("modalCambiarContrasena");
-  if (event.target === modalContrasena) cerrarModalContrasena();
-});
-
-/* ==============================================================
-   ENVÍO FORMULARIO PERSONAL
-   ============================================================== */
-document.getElementById("formEditarPersonal").addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const datosEditados = {
-    primerNombre: document.getElementById("edit_primerNombre").value.trim(),
-    segundoNombre: document.getElementById("edit_segundoNombre").value.trim(),
-    primerApellido: document.getElementById("edit_primerApellido").value.trim(),
-    segundoApellido: document.getElementById("edit_segundoApellido").value.trim(),
-    correo: document.getElementById("edit_correo").value.trim() || null,
-    telefono: document.getElementById("edit_telefono").value.trim(),
-    sexo: document.getElementById("edit_sexo").value,
-    genero: document.getElementById("edit_genero").value,
-  };
-
-  Swal.fire({ title: "Guardando...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-
-  try {
-    const usuario = JSON.parse(localStorage.getItem("usuario"));
-    const id = usuario?.credenciales?.id;
-    if (!id) throw new Error("No se encontró el ID del usuario");
-
-    const response = await fetch(`http://localhost:8080/perfil/editar/informacionPersonal/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(datosEditados),
-    });
-
-    if (!response.ok) throw new Error(await response.text() || "Error");
-
-    await Swal.fire({ icon: "success", title: "¡Guardado!", timer: 2000, timerProgressBar: true });
-    await obtenerPerfil();
-    cerrarModal();
-
-  } catch (error) {
-    Swal.fire({ icon: "error", title: "Error", text: error.message });
-  }
-});
-
-/* ==============================================================
-   ENVÍO CONTRASEÑA
-   ============================================================== */
-document.getElementById("formCambiarContrasena").addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const actual = document.getElementById("contrasenaActual").value;
-  const nueva = document.getElementById("contrasenaNueva").value;
-  const confirmar = document.getElementById("confirmarContrasena").value;
-  const usuario = JSON.parse(localStorage.getItem("usuario"));
-
-  if (!actual || !nueva || !confirmar) return Swal.fire("Warning", "Completa todos los campos", "warning");
-  if (nueva.length < 6) return Swal.fire("Warning", "Mínimo 6 caracteres", "warning");
-  if (nueva !== confirmar) return Swal.fire("Error", "No coinciden", "error");
-
-  const datos = {
-    email: safe(datosUsuario.correo, usuario.credenciales.correo),
-    contraseaActual: actual,
-    contraseñaNueva: nueva
-  };
-
-  Swal.fire({ title: "Cambiando...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-
-  try {
-    const response = await fetch("http://localhost:8080/cambiarContraseña/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(datos),
-    });
-
-    if (!response.ok) throw new Error(await response.text() || "Error");
-
-    await Swal.fire({ icon: "success", title: "¡Cambiada!", text: "Vuelve a iniciar sesión.", timer: 3000 });
-    cerrarModalContrasena();
-
-  } catch (error) {
-    Swal.fire({ icon: "error", title: "Error", text: error.message });
-  }
-});
-
-/* ==============================================================
-   INICIALIZACIÓN
+   INICIALIZACIÓN ÚNICA
    ============================================================== */
 window.addEventListener("DOMContentLoaded", obtenerPerfil);
-
-function toggle2FA() { document.getElementById("toggle2FA").classList.toggle("active"); }

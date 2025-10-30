@@ -28,7 +28,7 @@
         </div>
       </a>
 
-      <!-- PERFIL MODERNO CON TRANSICIÓN -->
+      <!-- PERFIL CON DROPDOWN -->
       <div class="position-relative">
         <div class="d-flex align-items-center text-white profile-toggle">
           <div class="me-2">
@@ -42,9 +42,9 @@
           </div>
         </div>
 
-        <!-- DROPDOWN CON TRANSICIÓN -->
+        <!-- DROPDOWN -->
         <div id="profileDropdown" class="shadow-lg">
-          <div class="p-3 border-bottom">
+          <div class="p-3 border-bottom bg-light">
             <div class="d-flex align-items-center">
               <div class="me-3">
                 <div class="avatar-circle bg-success text-white">
@@ -58,11 +58,15 @@
             </div>
           </div>
           <div class="p-2">
-            <a href="../perfil/perfil.html" class="dropdown-item d-flex align-items-center hover-bg">
-              <i class="bi bi-person me-3 text-success" ></i>
+            <a href="\perfil\perfil.html" class="dropdown-item d-flex align-items-center hover-bg rounded">
+              <i class="bi bi-person-circle me-3 text-success"></i>
               <span style="color: var(--verde-oscuro);">Mi perfil</span>
             </a>
-            <a href="#" id="logoutBtn" class="dropdown-item d-flex align-items-center hover-bg text-danger">
+            <a href="pedidos/mis-pedidos.html" class="dropdown-item d-flex align-items-center hover-bg rounded">
+              <i class="bi bi-receipt me-3 text-success"></i>
+              <span style="color: var(--verde-oscuro);">Mis pedidos</span>
+            </a>
+            <a href="#" id="logoutBtn" class="dropdown-item d-flex align-items-center hover-bg rounded text-danger">
               <i class="bi bi-box-arrow-right me-3"></i>
               <span>Cerrar sesión</span>
             </a>
@@ -119,24 +123,17 @@
       <!-- MAIN CONTENT -->
       <main class="col-lg-10 p-4">
         <h3 class="mb-4">Productos</h3>
-
-        <!-- GRID DE PRODUCTOS -->
         <div id="productsGrid" class="row g-3">
           <div class="col-12 text-center">
             <div class="spinner-border text-success" role="status"></div>
           </div>
         </div>
-
-        <footer class="mt-5">
-
-        </footer>
       </main>
     </div>
   </div>
 
   <!-- BOTÓN CARRITO -->
-  <button class="btn cart-fab btn-lg rounded-circle text-white" style="background: var(--verde-oscuro)"
-    data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
+  <button class="btn cart-fab btn-lg rounded-circle text-white" style="background: var(--verde-oscuro)" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
     <i class="bi bi-cart-check-fill"></i>
     <span id="cartCount" class="badge bg-light text-dark ms-1">0</span>
   </button>

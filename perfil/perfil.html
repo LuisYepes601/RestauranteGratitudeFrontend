@@ -7,7 +7,10 @@
   <title>Perfil - Restaurante Gratitude</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="\perfil\css\style.css">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Cropper.js -->
+  <link href="https://cdn.jsdelivr.net/npm/cropperjs@1.5.12/dist/cropper.min.css" rel="stylesheet" />
+  <!-- SweetAlert2 -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
@@ -17,9 +20,34 @@
 
     <!-- Botón Volver al Menú -->
     <div class="back-menu">
-      <a href="\Menu\index.html" class="btn btn-outline">
+      <a href="../menu.html" class="btn btn-outline">
         <i class="fas fa-arrow-left"></i> Volver al Menú
       </a>
+    </div>
+
+    <!-- ESTADÍSTICAS -->
+    <div class="stats-grid mb-4">
+      <div class="stat-card">
+        <i class="fas fa-receipt"></i>
+        <div>
+          <div class="stat-number" id="totalPedidos">0</div>
+          <div class="stat-label">Pedidos</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <i class="fas fa-star"></i>
+        <div>
+          <div class="stat-number" id="nivelUsuario">Novato</div>
+          <div class="stat-label">Nivel</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <i class="fas fa-bell"></i>
+        <div>
+          <div class="stat-number" id="notificaciones">0</div>
+          <div class="stat-label">Notificaciones</div>
+        </div>
+      </div>
     </div>
 
     <header>
@@ -30,9 +58,8 @@
     <div class="profile-card">
       <div class="profile-header">
         <div class="avatar-wrapper">
-          <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Foto de perfil" class="avatar"
-            id="fotoPerfil" />
-          <div class="edit-photo" onclick="editarFoto()">
+          <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Foto de perfil" class="avatar" id="fotoPerfil" />
+          <div class="edit-photo" onclick="abrirCropper()">
             <i class="fas fa-camera"></i>
           </div>
         </div>
@@ -44,6 +71,19 @@
       </div>
 
       <div class="content">
+
+        <!-- ÚLTIMOS PEDIDOS -->
+        <div class="section">
+          <div class="section-title">
+            <span><i class="fas fa-history"></i> Últimos Pedidos</span>
+            <a href="../pedidos/mis-pedidos.html" class="btn btn-sm btn-outline">Ver todos</a>
+          </div>
+          <div id="ultimosPedidos" class="skeleton-list">
+            <div class="skeleton-item"></div>
+            <div class="skeleton-item"></div>
+            <div class="skeleton-item"></div>
+          </div>
+        </div>
 
         <!-- Detalles Personales -->
         <div class="section">
@@ -174,10 +214,9 @@
           </div>
           <div class="security-item">
             <div>
-              <div style="font-weight:600;">Autenticación de dos factores (2FA)</div>
-              <div class="info-label">Protege tu cuenta con un código adicional</div>
+              <div style="font-weight:600;">Modo Oscuro</div>
             </div>
-            <div class="toggle-2fa" id="toggle2FA" onclick="toggle2FA()"></div>
+            <div class="toggle-2fa" id="toggleDark" onclick="toggleDarkMode()"></div>
           </div>
           <div class="security-item">
             <div>
@@ -189,10 +228,28 @@
 
       </div>
     </div>
-
   </div>
 
-  <!-- MODAL EDITAR INFORMACIÓN PERSONAL -->
+  <!-- MODAL CROPPER -->
+  <div id="modalCropper" class="modal">
+    <div class="modal-content modal-foto">
+      <div class="modal-header">
+        <h3>Recortar Foto</h3>
+        <span class="close" onclick="cerrarCropper()">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div id="cropperContainer">
+          <img id="cropperImage" src="" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="cerrarCropper()">Cancelar</button>
+        <button class="btn" onclick="guardarFotoRecortada()">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL EDITAR PERSONAL -->
   <div id="modalEditarPersonal" class="modal">
     <div class="modal-content">
       <div class="modal-header">
@@ -279,40 +336,12 @@
     </div>
   </div>
 
-  <!-- MODAL EDITAR FOTO DE PERFIL -->
-  <div id="modalEditarFoto" class="modal" style="display: none;">
-    <div class="modal-content modal-foto">
-      <div class="modal-header">
-        <h3>Editar Foto de Perfil</h3>
-        <span class="close" onclick="cerrarModalFoto()">×</span>
-      </div>
-      <div class="modal-body">
-        <div class="preview-container">
-          <img id="previewFoto" src="" alt="Vista previa" class="avatar-preview" />
-          <label for="fotoInput" class="camera-btn">
-            <i class="fas fa-camera"></i>
-          </label>
-        </div>
-        <label for="fotoInput" class="upload-area" id="uploadArea">
-          <i class="fas fa-cloud-upload-alt"></i>
-          <p id="uploadText">Arrastra una imagen aquí o haz clic para seleccionar</p>
-          <input type="file" id="fotoInput" accept="image/*" />
-        </label>
-        <small class="upload-info">JPG, PNG, GIF • Máx. 5MB • Recomendado: 400×400px</small>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline" onclick="cerrarModalFoto()">Cancelar</button>
-        <button type="button" class="btn" id="btnSubirFoto" disabled>Subir Foto</button>
-      </div>
-    </div>
-  </div>
-
   <!-- MODAL EDITAR DIRECCIÓN -->
-  <div id="modalEditarDireccion" class="modal" style="display: none;">
+  <div id="modalEditarDireccion" class="modal">
     <div class="modal-content">
       <div class="modal-header">
         <h3>Editar Dirección</h3>
-        <span class="close" onclick="cerrarModalDireccion()">×</span>
+        <span class="close" onclick="cerrarModalDireccion()">&times;</span>
       </div>
       <form id="formEditarDireccion">
         <div class="form-grid">
@@ -355,11 +384,11 @@
   </div>
 
   <!-- MODAL EDITAR IDENTIFICACIÓN -->
-  <div id="modalEditarIdentificacion" class="modal" style="display: none;">
+  <div id="modalEditarIdentificacion" class="modal">
     <div class="modal-content">
       <div class="modal-header">
         <h3>Editar Identificación</h3>
-        <span class="close" onclick="cerrarModalIdentificacion()">×</span>
+        <span class="close" onclick="cerrarModalIdentificacion()">&times;</span>
       </div>
       <form id="formEditarIdentificacion">
         <div class="form-grid">
@@ -386,7 +415,10 @@
     </div>
   </div>
 
-  <script src="\perfil\js\gestionPerfil.js"></script>
+  <!-- SCRIPTS -->
+  <script src="js/gestionPerfil.js"></script>
+  <script src="js/mejoras-perfil.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.5.12/dist/cropper.min.js"></script>
 </body>
 
 </html>
