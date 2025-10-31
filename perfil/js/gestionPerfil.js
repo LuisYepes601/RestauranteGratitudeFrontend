@@ -39,7 +39,7 @@ async function obtenerPerfil() {
     const data = await response.json();
     datosUsuario = data;
     cargarPerfil(data);
-    await cargarMejoras(); // ← Carga estadísticas y pedidos
+    await cargarMejoras(); // ← Carga estadísticas y pedidos recientes
   } catch (error) {
     console.error("Error al cargar perfil:", error);
     Swal.fire({
@@ -88,7 +88,7 @@ function cargarPerfil(data) {
 }
 
 /* ==============================================================
-   MEJORAS: ESTADÍSTICAS + PEDIDOS
+   MEJORAS: ESTADÍSTICAS + PEDIDOS RECIENTES
    ============================================================== */
 async function cargarMejoras() {
   const container = document.getElementById("ultimosPedidos");
@@ -101,7 +101,8 @@ async function cargarMejoras() {
       return;
     }
 
-    const pedidosRes = await fetch(`http://localhost:8080/pedidos/usuario/${id}?limit=3`);
+    // NUEVO ENDPOINT: /pedidos/recientes/usuario/{id}?limite=2
+    const pedidosRes = await fetch(`http://localhost:8080/pedidos/recientes/usuario/${id}?limite=3`);
 
     if (!pedidosRes.ok) {
       container.innerHTML = `<p class="text-muted text-center">No hay pedidos recientes</p>`;
@@ -115,21 +116,21 @@ async function cargarMejoras() {
       return;
     }
 
-    // Cargar estadísticas
+    // Cargar estadísticas (usando solo los pedidos recientes)
     cargarEstadisticas(pedidos);
 
-    // Cargar pedidos
+    // Cargar pedidos recientes
     cargarUltimosPedidos(pedidos);
 
   } catch (err) {
-  
-    container.innerHTML = `<p class="text-muted text-center">No hay pedidos recientes</p>`;
+    console.error("Error al cargar pedidos recientes:", err);
+    container.innerHTML = `<p class="text-muted text-center">Error de conexión</p>`;
   }
 }
 
 function cargarEstadisticas(pedidos) {
   const total = pedidos.length;
-  const nivel = total > 20 ? "VIP" : total > 10 ? "Frecuente" : "Novato";
+  const nivel = total >= 2 ? "Activo" : total >= 1 ? "Novato" : "Sin actividad";
   document.getElementById("totalPedidos").textContent = total;
   document.getElementById("nivelUsuario").textContent = nivel;
   document.getElementById("notificaciones").textContent = Math.floor(Math.random() * 5);
@@ -145,12 +146,12 @@ function cargarUltimosPedidos(pedidos) {
   container.innerHTML = pedidos.map(p => `
     <div class="order-mini">
       <div>
-        <div class="fw-bold">#${p.id}</div>
-        <small class="text-muted">${new Date(p.fecha).toLocaleDateString()}</small>
+        <div class="fw-bold">Nº${p.idPedido}</div>
+        <small class="text-muted">${formatearFecha(p.fechaPedido)}</small>
       </div>
       <div class="text-end">
-        <div>$${p.total?.toFixed(2) || '0.00'}</div>
-        <small class="text-success">${p.estado || 'Pendiente'}</small>
+        <div>COP $${p.total?.toFixed(2) || '0.00'}</div>
+        <small class="text-success">${p.estadoPedido || 'Pendiente'}</small>
       </div>
     </div>
   `).join("");

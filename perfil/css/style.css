@@ -2,7 +2,7 @@
   --primary-color: #2e7d32;
   --primary-dark: #1b5e20;
   --primary-light: #4caf50;
-  --light-bg: #f9fff9;
+  --light-bg: #e4f7e4;
   --text: #1a1a1a;
   --text-light: #555;
   --border: #e0e0e0;
@@ -79,7 +79,7 @@ header h1 {
   border-radius: 50%;
   object-fit: cover;
   border: 5px solid white;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .edit-photo {
@@ -110,7 +110,7 @@ header h1 {
 }
 
 .user-role {
-  background: rgba(255,255,255,0.2);
+  background: rgba(255, 255, 255, 0.2);
   display: inline-block;
   padding: 0.35rem 1rem;
   border-radius: 50px;
@@ -280,11 +280,25 @@ header h1 {
 }
 
 @media (max-width: 768px) {
-  body { padding: 1rem; }
-  .profile-header { padding: 1.5rem; }
-  .user-name { font-size: 1.5rem; }
-  .content { padding: 1.5rem; }
-  .back-menu { text-align: center; }
+  body {
+    padding: 1rem;
+  }
+
+  .profile-header {
+    padding: 1.5rem;
+  }
+
+  .user-name {
+    font-size: 1.5rem;
+  }
+
+  .content {
+    padding: 1.5rem;
+  }
+
+  .back-menu {
+    text-align: center;
+  }
 }
 
 .modal {
@@ -295,7 +309,7 @@ header h1 {
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
   animation: fadeIn 0.3s ease;
 }
@@ -384,13 +398,25 @@ form {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideIn {
-  from { transform: translateY(-50px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 #modalCambiarContrasena .modal-content {
@@ -455,8 +481,13 @@ form {
 }
 
 @keyframes loading {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 .order-mini {
@@ -481,6 +512,12 @@ form {
 }
 
 @media (max-width: 576px) {
-  .stats-grid { grid-template-columns: 1fr 1fr; }
-  .stat-card { padding: 0.8rem; }
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .stat-card {
+    padding: 0.8rem;
+  }
 }
+
