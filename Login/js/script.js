@@ -26,10 +26,10 @@ const RUTA_DEFAULT = "../Menu/index.html";
 
 // === OBTENER ROL DEL USUARIO ===
 function obtenerRol(usuario) {
-  return usuario?.credenciales?.rol || 
-         usuario?.rol || 
-         usuario?.tipo || 
-         "cliente";
+  return usuario?.credenciales?.rol ||
+    usuario?.rol ||
+    usuario?.tipo ||
+    "cliente";
 }
 
 // === VALIDAR RUTA SEGÚN ROL ===
