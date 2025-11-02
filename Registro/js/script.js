@@ -121,10 +121,10 @@ document.addEventListener("DOMContentLoaded", () => {
         let data;
 
         if (rol === "Usuario") {
-            endpoint = "http://localhost:8080/login/registro/usuario/basico";
+            endpoint = "https://restaurantegratitudeapi.onrender.com/login/registro/usuario/basico";
             data = dataUsuario;
         } else {
-            endpoint = "http://localhost:8080/login/registro/usuario/empleado";
+            endpoint = "https://restaurantegratitudeapi.onrender.com/login/registro/usuario/empleado";
             data = { usuarioBasicoDto: dataUsuario };
         }
 

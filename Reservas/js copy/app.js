@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
 document.addEventListener("DOMContentLoaded", () => {
     const selectMesa = document.getElementById("mesa");
 
-    fetch("http://localhost:8080/mesa/listar")
+    fetch("https://restaurantegratitudeapi.onrender.com/mesa/listar")
         .then(response => {
             if (!response.ok) throw new Error("Error al cargar las mesas");
             return response.json();
@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
 document.addEventListener("DOMContentLoaded", () => {
     const selectTipo = document.getElementById("tipo");
 
-    fetch("http://localhost:8080/tipoReserva/obtenerTodas/")
+    fetch("https://restaurantegratitudeapi.onrender.com/tipoReserva/obtenerTodas/")
         .then(response => {
             if (!response.ok) throw new Error("Error al cargar los tipos de reserva");
             return response.json();
@@ -113,7 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 didOpen: () => Swal.showLoading(),
             });
 
-            const response = await fetch("http://localhost:8080/reserva/crear", {
+            const response = await fetch("https://restaurantegratitudeapi.onrender.com/reserva/crear", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(reserva)

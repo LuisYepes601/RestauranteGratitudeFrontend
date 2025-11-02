@@ -7,7 +7,7 @@ async function obtenerUsuario() {
 
     if (!id) throw new Error("No hay usuario logueado");
 
-    const response = await fetch(`http://localhost:8080/user/obtener/byId/${id}`);
+    const response = await fetch(`https://restaurantegratitudeapi.onrender.com/user/obtener/byId/${id}`);
     if (!response.ok) throw new Error("Error al obtener usuario");
 
     usuario = await response.json();
@@ -79,7 +79,7 @@ async function crearPedido() {
     };
 
 
-    const response = await fetch("http://localhost:8080/pedido/crear", {
+    const response = await fetch("https://restaurantegratitudeapi.onrender.com/pedido/crear", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)

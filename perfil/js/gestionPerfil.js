@@ -29,7 +29,7 @@ async function obtenerPerfil() {
 
     if (!id) throw new Error("No se encontró el ID del usuario en localStorage");
 
-    const response = await fetch(`http://localhost:8080/perfil/consulrtasDatos/${id}`, {
+    const response = await fetch(`https://restaurantegratitudeapi.onrender.com/perfil/consulrtasDatos/${id}`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });
@@ -102,7 +102,7 @@ async function cargarMejoras() {
     }
 
     // NUEVO ENDPOINT: /pedidos/recientes/usuario/{id}?limite=2
-    const pedidosRes = await fetch(`http://localhost:8080/pedidos/recientes/usuario/${id}?limite=3`);
+    const pedidosRes = await fetch(`https://restaurantegratitudeapi.onrender.com/pedidos/recientes/usuario/${id}?limite=3`);
 
     if (!pedidosRes.ok) {
       container.innerHTML = `<p class="text-muted text-center">No hay pedidos recientes</p>`;
@@ -200,7 +200,7 @@ async function guardarFotoRecortada() {
 
     try {
       const id = JSON.parse(localStorage.getItem("usuario"))?.credenciales?.id;
-      const res = await fetch(`http://localhost:8080/perfil/foto/agregar/${id}`, {
+      const res = await fetch(`https://restaurantegratitudeapi.onrender.com/perfil/foto/agregar/${id}`, {
         method: "POST",
         body: formData
       });
@@ -274,7 +274,7 @@ document.getElementById("formEditarPersonal").addEventListener("submit", async (
     const id = usuario?.credenciales?.id;
     if (!id) throw new Error("No se encontró el ID del usuario");
 
-    const response = await fetch(`http://localhost:8080/perfil/editar/informacionPersonal/${id}`, {
+    const response = await fetch(`https://restaurantegratitudeapi.onrender.com/perfil/editar/informacionPersonal/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(datosEditados),
@@ -328,7 +328,7 @@ document.getElementById("formCambiarContrasena").addEventListener("submit", asyn
   Swal.fire({ title: "Cambiando...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
 
   try {
-    const response = await fetch("http://localhost:8080/cambiarContraseña/", {
+    const response = await fetch("https://restaurantegratitudeapi.onrender.com/cambiarContraseña/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(datos),
@@ -383,7 +383,7 @@ document.getElementById("formEditarDireccion").addEventListener("submit", async 
     const id = usuario?.credenciales?.id;
     if (!id) throw new Error("ID no encontrado");
 
-    const response = await fetch(`http://localhost:8080/perfil/editar/direccion/${id}`, {
+    const response = await fetch(`https://restaurantegratitudeapi.onrender.com/perfil/editar/direccion/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(datosDireccion)
@@ -436,7 +436,7 @@ document.getElementById("formEditarIdentificacion").addEventListener("submit", a
     const id = usuario?.credenciales?.id;
     if (!id) throw new Error("ID no encontrado");
 
-    const response = await fetch(`http://localhost:8080/perfil/editar/identificacion/${id}`, {
+    const response = await fetch(`https://restaurantegratitudeapi.onrender.com/perfil/editar/identificacion/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(datosIdentificacion)

@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         try {
-            const response = await fetch("http://localhost:8080/estudios/crear", {
+            const response = await fetch("https://restaurantegratitudeapi.onrender.com/estudios/crear", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
