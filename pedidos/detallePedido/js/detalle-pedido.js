@@ -51,7 +51,7 @@ async function cargarDetalle() {
   }
 
   try {
-    const res = await fetch(`https://restaurantegratitudeapi.onrender.com/pedidos/${idPedido}/${idUsuario}`);
+    const res = await fetch(`http://localhost:8080/pedidos/${idPedido}/${idUsuario}`);
     if (!res.ok) throw new Error("No se pudo cargar el pedido");
 
     const data = await res.json();

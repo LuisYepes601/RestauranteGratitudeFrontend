@@ -25,10 +25,10 @@ document.addEventListener("DOMContentLoaded", () => {
         let body = {};
 
         if (identificacion) {
-            endpoint = "https://restaurantegratitudeapi.onrender.com/recuperarContraseña/by/identificacion";
+            endpoint = "http://localhost:8080/recuperarContraseña/by/identificacion";
             body = { identificacion: identificacion };
         } else if (email) {
-            endpoint = "https://restaurantegratitudeapi.onrender.com/recuperarContraseña/by/gmail";
+            endpoint = "http://localhost:8080/recuperarContraseña/by/gmail";
             body = { gmail: email };
         }
 

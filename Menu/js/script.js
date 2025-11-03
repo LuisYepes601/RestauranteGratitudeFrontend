@@ -32,7 +32,7 @@ function limpiarImagen(valor) {
 /* ------------------ CARGAR PRODUCTOS DESDE API ------------------ */
 async function cargarProductos() {
   try {
-    const response = await fetch("https://restaurantegratitudeapi.onrender.com/producto/obtener/todos", {
+    const response = await fetch("http://localhost:8080/producto/obtener/todos", {
       method: "GET",
       headers: { "Content-Type": "application/json" }
     });

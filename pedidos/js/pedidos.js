@@ -45,7 +45,7 @@ async function cargarPedidos(pagina = 0) {
         const buscador = document.getElementById("buscador").value.trim();
         const estado = document.getElementById("filtroEstado").value;
 
-        let url = `https://restaurantegratitudeapi.onrender.com/pedidos/usuario/${id}?page=${pagina}&size=${TAMANO_PAGINA}&sort=fechaPedido,desc`;
+        let url = `http://localhost:8080/pedidos/usuario/${id}?page=${pagina}&size=${TAMANO_PAGINA}&sort=fechaPedido,desc`;
         if (buscador) url += `&search=${encodeURIComponent(buscador)}`;
         if (estado) url += `&estado=${encodeURIComponent(estado)}`;
 
