@@ -9,9 +9,12 @@
 }
 
 body {
-    background-color: #f4f7f8;
-    color: #333;
+    background-image: url("../img/fondo registro.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
 }
+
 
 /* =========================
    CONTENEDOR PRINCIPAL
@@ -22,7 +25,7 @@ body {
     background-color: #fff;
     padding: 30px;
     border-radius: 12px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
 }
 
 /* =========================
@@ -35,7 +38,8 @@ body {
 
 .header .logo {
     font-size: 40px;
-    color: #6ab04c; /* verde claro */
+    color: #6ab04c;
+    /* verde claro */
     margin-bottom: 10px;
 }
 
@@ -201,3 +205,20 @@ textarea {
         grid-template-columns: 1fr;
     }
 }
+.container {
+    opacity: 0;
+    transform: translateY(8px);
+    animation: proEnter 0.6s ease-out forwards;
+}
+
+@keyframes proEnter {
+    0% {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+

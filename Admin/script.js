@@ -1,242 +1,415 @@
-// === DATOS DE EJEMPLO PARA PRUEBAS ===
-const API_BASE = 'http://localhost:8080/api';
+// === DATOS DE CONFIGURACIÓN ===
+const API_BASE = 'http://localhost:8080';
+
+// === MAPEO CATEGORÍAS ===
+const CATEGORIAS_MAP = {
+  'Repostería': 1, 'Heladería': 2, 'Panadería': 3, 'Gourmet': 4, 'Bebidas': 5
+};
+const CATEGORIAS_INVERSO = { 1: 'Repostería', 2: 'Heladería', 3: 'Panadería', 4: 'Gourmet', 5: 'Bebidas' };
+
+// === MAPEO TIPOS DE CONTENIDO ===
+const TIPOS_CONTENIDO_MAP = {
+  'Unidad': 5, 'Gramos': 2, 'Kilogramos': 1, 'Mililitros': 4, 'Litros': 3,
+  'Onzas': 6, 'Libras': 7, 'Paquete': 8, 'Caja': 9, 'Botella': 10,
+  'Bolsa': 11, 'Porción': 12, 'Docena': 13, 'Otro': 14
+};
+
+// === VARIABLES GLOBALES ===
+let productos = [];
+let clientes = [];
+let currentPage = 1;
+const itemsPerPage = 10;
 
 // === CARGAR NOMBRE DE USUARIO ===
 function cargarNombreUsuario() {
   const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
-  console.log(usuario);
-
-  const nombre = usuario?.credenciales?.nombre || 'Usuario';
-  document.getElementById('userName').textContent = nombre;
-  console.log(nombre);
-
+  const nombre = usuario.credenciales?.nombre || 'Usuario';
+  const el = document.querySelector('.user-name');
+  if (el) el.textContent = nombre;
 }
 
-// === CONSUMIR APIs DEL DASHBOARD ===
+// === DASHBOARD ===
 async function cargarDashboard() {
   try {
-    // 1. Total de Pedidos
-    const resPedidos = await fetch(`${API_BASE}/pedidos/count`);
-    const totalPedidos = resPedidos.ok ? (await resPedidos.json()).count : 1245;
+    const [pedidosRes, ingresosRes, clientesRes, pendientesRes] = await Promise.all([
+      fetch(`${API_BASE}/pedidos/count`),
+      fetch(`${API_BASE}/ventas/ingresos-mes`),
+      fetch(`${API_BASE}/clientes/nuevos-mes`),
+      fetch(`${API_BASE}/pedidos/pendientes`)
+    ]);
 
-    // 2. Ingresos del mes
-    const resIngresos = await fetch(`${API_BASE}/ventas/ingresos-mes`);
-    const ingresos = resIngresos.ok ? (await resIngresos.json()).total : 8540;
+    const totalPedidos = pedidosRes.ok ? (await pedidosRes.json()).count : 1245;
+    const ingresos = ingresosRes.ok ? (await ingresosRes.json()).total : 8540;
+    const nuevosClientes = clientesRes.ok ? (await clientesRes.json()).count : 320;
+    const pendientes = pendientesRes.ok ? (await pendientesRes.json()).count : 23;
 
-    // 3. Nuevos Clientes
-    const resClientes = await fetch(`${API_BASE}/clientes/nuevos-mes`);
-    const nuevosClientes = resClientes.ok ? (await resClientes.json()).count : 320;
-
-    // 4. Pedidos Pendientes
-    const resPendientes = await fetch(`${API_BASE}/pedidos/pendientes`);
-    const pendientes = resPendientes.ok ? (await resPendientes.json()).count : 23;
-
-    // Actualizar tarjetas
-    document.querySelectorAll('.stats-card')[0].querySelector('h3').textContent = totalPedidos;
-    document.querySelectorAll('.stats-card')[1].querySelector('h3').textContent = `$${ingresos.toFixed(2)}`;
-    document.querySelectorAll('.stats-card')[2].querySelector('h3').textContent = nuevosClientes;
-    document.querySelectorAll('.stats-card')[3].querySelector('h3').textContent = pendientes;
-
+    const cards = document.querySelectorAll('.stats-card');
+    if (cards[0]) cards[0].querySelector('h3').textContent = totalPedidos;
+    if (cards[1]) cards[1].querySelector('h3').textContent = `$${ingresos.toFixed(2)}`;
+    if (cards[2]) cards[2].querySelector('h3').textContent = nuevosClientes;
+    if (cards[3]) cards[3].querySelector('h3').textContent = pendientes;
   } catch (error) {
-    console.error('Error al cargar dashboard:', error);
-    Swal.fire('Error', 'No se pudieron cargar los datos del dashboard', 'warning');
+    console.error('Error dashboard:', error);
   }
 }
 
-// === Productos de ejemplo ===
-const PRODUCTS = [
-  { img: 'https://via.placeholder.com/300x200', title: 'Tarta de Fresa', desc: 'Deliciosa tarta con fresas frescas', price: 15.99, category: 'Repostería' },
-  { img: 'https://via.placeholder.com/300x200', title: 'Helado Artesano', desc: 'Helado cremoso de vainilla', price: 8.49, category: 'Heladería' },
-  { img: 'https://via.placeholder.com/300x200', title: 'Pan Campesino', desc: 'Pan recién horneado', price: 2.25, category: 'Panadería' },
-  { img: 'https://via.placeholder.com/300x200', title: 'Café Gourmet', desc: 'Café 100% arábica', price: 3.50, category: 'Gourmet' }
-];
+// === PRODUCTOS ===
+async function cargarProductos() {
+  Swal.fire({ title: 'Cargando Productos...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+  try {
+    const response = await fetch(`${API_BASE}/producto/obtener/todos`);
+    if (!response.ok) throw new Error('Error productos');
+    const data = await response.json();
+    productos = Array.isArray(data) ? data.map(p => ({
+      id: p.id, nombre: p.nombre, precio: p.precio, descripcion: p.descripcion,
+      categoria: p.categoria || 'Sin categoría', id_categoria: p.idCategoria,
+      valorcontenido: p.valorContenido, tipoContenido: p.tipoContenido || 'Unidad',
+      idTipoContenido: p.idTipoContenido, imagen: p.imagen || 'https://via.placeholder.com/300x200'
+    })) : [];
+    renderProductCards();
+    renderProductTable();
+    Swal.close();
+  } catch (error) {
+    console.error(error);
+    Swal.fire('Error', 'No se pudieron cargar los productos', 'error');
+    productos = [{ id: 1, nombre: 'Tarta de Fresa', precio: 15.99, descripcion: 'Deliciosa tarta', imagen: 'https://via.placeholder.com/300x200', categoria: 'Repostería', id_categoria: 1, valorcontenido: '250', tipoContenido: 'Gramos', id_tipo_contenido: 2 }];
+    renderProductCards(); renderProductTable();
+  }
+}
 
-// Renderizar tarjetas
 function renderProductCards() {
   const container = document.getElementById('productsGridView');
+  if (!container) return;
   container.innerHTML = '';
-  PRODUCTS.forEach(p => {
-    const card = `
-      <div class="col-lg-3 col-md-4 col-sm-6">
-        <div class="product-card">
-          <img src="${p.img}" alt="${p.title}" loading="lazy">
-          <span class="category">${p.category}</span>
-          <h6>${p.title}</h6>
-          <p class="text-muted small mb-2">${p.desc}</p>
-          <div class="d-flex justify-content-between align-items-center">
-            <span class="price">$${p.price.toFixed(2)}</span>
+  if (!productos.length) { container.innerHTML = '<div class="col-12 text-center text-muted py-4">No hay productos.</div>'; return; }
+  const fragment = document.createDocumentFragment();
+  productos.forEach(p => {
+    const col = document.createElement('div'); col.className = 'col-lg-3 col-md-4 col-sm-6';
+    const safeName = p.nombre.replace(/"/g, '&quot;');
+    col.innerHTML = `
+      <div class="product-card">
+        <img src="${p.imagen}" alt="${safeName}" loading="lazy">
+        <div class="card-body">
+          <span class="category">${p.categoria}</span>
+          <h6>${safeName}</h6>
+          <p class="text-muted">${p.descripcion}</p>
+          <div class="d-flex justify-content-between align-items-center mt-auto">
+            <span class="price">$${Number(p.precio).toFixed(2)}</span>
             <div>
-              <button class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-edit"></i></button>
-              <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+              <button class="btn btn-sm btn-outline-primary me-1 edit-product" data-id="${p.id}"><i class="fas fa-edit"></i></button>
+              <button class="btn btn-sm btn-outline-danger delete-product" data-id="${p.id}"><i class="fas fa-trash"></i></button>
             </div>
           </div>
         </div>
       </div>`;
-    container.innerHTML += card;
+    fragment.appendChild(col);
   });
+  container.appendChild(fragment);
 }
 
-// Renderizar tabla
 function renderProductTable() {
   const tbody = document.querySelector('#productsTableView tbody');
+  if (!tbody) return;
   tbody.innerHTML = '';
-  PRODUCTS.forEach(p => {
-    const stock = Math.floor(Math.random() * 30) + 10;
+  if (!productos.length) { tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted py-4">No hay productos.</td></tr>'; return; }
+  productos.forEach(p => {
+    const stock = Math.floor(Math.random() * 40) + 5;
     const status = stock > 0 ? 'Disponible' : 'Agotado';
     const statusClass = stock > 0 ? 'delivered' : 'cancelled';
-    const row = `
+    tbody.innerHTML += `
       <tr>
-        <td><img src="${p.img}" alt="${p.title}" style="width:50px;height:50px;object-fit:cover;"></td>
-        <td>${p.title}</td>
-        <td>${p.category}</td>
-        <td>$${p.price.toFixed(2)}</td>
-        <td>${stock}</td>
-        <td><span class="status ${statusClass}">${status}</span></td>
-        <td>
-          <button class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-edit"></i></button>
-          <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+        <td><img src="${p.imagen}" alt="${p.nombre}" style="width:50px;height:50px;object-fit:cover;border-radius:4px;"></td>
+        <td class="align-middle">${p.nombre}</td>
+        <td class="align-middle">${p.categoria}</td>
+        <td class="align-middle">$${Number(p.precio).toFixed(2)}</td>
+        <td class="align-middle">${stock}</td>
+        <td class="align-middle"><span class="status ${statusClass}">${status}</span></td>
+        <td class="align-middle">
+          <button class="btn btn-sm btn-outline-primary me-1 edit-product" data-id="${p.id}"><i class="fas fa-edit"></i></button>
+          <button class="btn btn-sm btn-outline-danger delete-product" data-id="${p.id}"><i class="fas fa-trash"></i></button>
         </td>
       </tr>`;
-    tbody.innerHTML += row;
   });
 }
 
-// Toggle sidebar
-const menuToggle = document.getElementById('menuToggle');
-const sidebar = document.getElementById('sidebar');
-const overlay = document.getElementById('sidebarOverlay');
-
-menuToggle.addEventListener('click', () => {
-  sidebar.classList.toggle('show');
-  overlay.classList.toggle('show');
-});
-
-overlay.addEventListener('click', () => {
-  sidebar.classList.remove('show');
-  overlay.classList.remove('show');
-});
-
-// User dropdown
-document.getElementById('userProfile').addEventListener('click', function () {
-  document.getElementById('userDropdown').classList.toggle('show');
-});
-
-document.addEventListener('click', function (e) {
-  const profile = document.getElementById('userProfile');
-  const dropdown = document.getElementById('userDropdown');
-  if (!profile.contains(e.target)) {
-    dropdown.classList.remove('show');
+// === CLIENTES ===
+async function cargarClientes() {
+  Swal.fire({ title: 'Cargando Clientes...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+  try {
+    const response = await fetch(`${API_BASE}/cliente/obtener/todos`);
+    if (!response.ok) throw new Error('Error clientes');
+    clientes = await response.json();
+    renderClientesTable();
+    setupClientesPagination();
+    Swal.close();
+  } catch (error) {
+    console.error(error);
+    Swal.fire('Error', 'No se pudieron cargar los clientes', 'error');
+    clientes = [];
+    renderClientesTable();
   }
-});
+}
 
-// Navegación
+function renderClientesTable() {
+  const tbody = document.querySelector('#customersTable tbody');
+  const search = document.getElementById('searchCustomers')?.value.toLowerCase() || '';
+  const statusFilter = document.getElementById('filterStatus')?.value || '';
+
+  let filtered = clientes.filter(c => {
+    const matchSearch = `${c.nombres} ${c.apellidos} ${c.email} ${c.telefono}`.toLowerCase().includes(search);
+    const matchStatus = !statusFilter || c.estado === statusFilter;
+    return matchSearch && matchStatus;
+  });
+
+  const start = (currentPage - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  const pageData = filtered.slice(start, end);
+
+  tbody.innerHTML = '';
+  if (pageData.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="8" class="text-center text-muted py-4">No se encontraron clientes.</td></tr>`;
+    document.getElementById('customersCount').textContent = `Mostrando 0 de ${filtered.length}`;
+    return;
+  }
+
+  pageData.forEach(c => {
+    const estadoClass = c.estado === 'Activo' ? 'delivered' : c.estado === 'Inactivo' ? 'pending' : 'cancelled';
+    const foto = c.foto || 'https://via.placeholder.com/40?text=U';
+    tbody.innerHTML += `
+      <tr>
+        <td><img src="${foto}" alt="foto" class="rounded-circle" width="40" height="40"></td>
+        <td class="align-middle">${c.nombres} ${c.apellidos}</td>
+        <td class="align-middle">${c.email}</td>
+        <td class="align-middle">${c.telefono}</td>
+        <td class="align-middle text-truncate" style="max-width: 180px;">${c.direccion || 'Sin dirección'}</td>
+        <td class="align-middle">${new Date(c.fechaRegistro).toLocaleDateString('es-CO')}</td>
+        <td class="align-middle"><span class="status ${estadoClass}">${c.estado}</span></td>
+        <td class="align-middle">
+          <button class="btn btn-sm btn-outline-primary me-1 edit-customer" data-id="${c.id}"><i class="fas fa-edit"></i></button>
+          <button class="btn btn-sm btn-outline-danger delete-customer" data-id="${c.id}"><i class="fas fa-trash"></i></button>
+        </td>
+      </tr>`;
+  });
+  document.getElementById('customersCount').textContent = `Mostrando ${start + 1}-${Math.min(end, filtered.length)} de ${filtered.length} clientes`;
+}
+
+function setupClientesPagination() {
+  const totalFiltered = clientes.filter(c => {
+    const search = document.getElementById('searchCustomers')?.value.toLowerCase() || '';
+    const status = document.getElementById('filterStatus')?.value || '';
+    return `${c.nombres} ${c.apellidos} ${c.email}`.toLowerCase().includes(search) && (!status || c.estado === status);
+  }).length;
+
+  const pages = Math.ceil(totalFiltered / itemsPerPage);
+  const pagination = document.getElementById('customersPagination');
+  pagination.innerHTML = '';
+  for (let i = 1; i <= pages; i++) {
+    pagination.innerHTML += `<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
+  }
+}
+
+// === NAVEGACIÓN ===
 document.querySelectorAll('.sidebar-nav a').forEach(link => {
   link.addEventListener('click', function (e) {
     e.preventDefault();
     document.querySelectorAll('.sidebar-nav a').forEach(l => l.classList.remove('active'));
     this.classList.add('active');
-
     document.querySelectorAll('.section-content').forEach(s => s.style.display = 'none');
-    const section = this.getAttribute('data-section') + 'Section';
-    document.getElementById(section).style.display = 'block';
-
+    const sectionId = this.getAttribute('data-section') + 'Section';
+    document.getElementById(sectionId).style.display = 'block';
     document.getElementById('sectionTitle').textContent = this.querySelector('span').textContent;
 
     if (window.innerWidth < 992) {
-      sidebar.classList.remove('show');
-      overlay.classList.remove('show');
+      document.getElementById('sidebar').classList.remove('show');
+      document.getElementById('sidebarOverlay').classList.remove('show');
     }
 
-    // Cargar dashboard solo si es la sección
-    if (this.getAttribute('data-section') === 'dashboard') {
-      cargarDashboard();
-    }
+    const section = this.getAttribute('data-section');
+    if (section === 'dashboard') cargarDashboard();
+    else if (section === 'products') cargarProductos();
+    else if (section === 'customers') { currentPage = 1; cargarClientes(); }
   });
 });
 
-// Toggle vistas productos
-document.getElementById('gridViewBtn').addEventListener('click', () => {
-  document.getElementById('gridViewBtn').classList.add('active');
-  document.getElementById('tableViewBtn').classList.remove('active');
-  document.getElementById('productsGridView').style.display = 'block';
-  document.getElementById('productsTableView').style.display = 'none';
-});
-
-document.getElementById('tableViewBtn').addEventListener('click', () => {
-  document.getElementById('tableViewBtn').classList.add('active');
-  document.getElementById('gridViewBtn').classList.remove('active');
-  document.getElementById('productsTableView').style.display = 'block';
-  document.getElementById('productsGridView').style.display = 'none';
-});
-
-// GENERAR REPORTE
-async function generarReporte(tipo) {
-  const titulos = {
-    clientes: "Reporte de Clientes",
-    productos: "Reporte de Productos",
-    pedidos: "Reporte de Pedidos",
-    ventas: "Reporte de Ventas"
-  };
-
-  const endpoints = {
-    clientes: `${API_BASE}/reportes/clientes`,
-    productos: `${API_BASE}/reportes/productos`,
-    pedidos: `${API_BASE}/reportes/pedidos`,
-    ventas: `${API_BASE}/reportes/ventas`
-  };
-
-  Swal.fire({
-    title: `Generando ${titulos[tipo]}`,
-    text: "Consultando datos...",
-    allowOutsideClick: false,
-    didOpen: () => Swal.showLoading()
-  });
-
-  try {
-    const response = await fetch(endpoints[tipo]);
-    if (!response.ok) throw new Error('Error en la API');
-
-    const data = await response.json();
-
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF();
-    pdf.setFontSize(20);
-    pdf.text(titulos[tipo], 105, 20, { align: 'center' });
-    pdf.setFontSize(12);
-    pdf.text(`Generado: ${new Date().toLocaleString()}`, 105, 30, { align: 'center' });
-    pdf.text(`Total: ${data.length} registros`, 20, 50);
-
-    let y = 70;
-    data.forEach((item, i) => {
-      if (y > 270) { pdf.addPage(); y = 20; }
-      pdf.setFontSize(10);
-      pdf.text(`${i + 1}. ${JSON.stringify(item)}`, 20, y);
-      y += 10;
-    });
-
-    pdf.save(`reporte_${tipo}_${new Date().toISOString().slice(0, 10)}.pdf`);
-
-    Swal.fire({
-      icon: 'success',
-      title: '¡Listo!',
-      text: `${titulos[tipo]} descargado`,
-      timer: 2000,
-      showConfirmButton: false
-    });
-
-  } catch (error) {
-    Swal.fire('Error', 'No se pudo generar el reporte', 'error');
+// === EVENTOS CLIENTES ===
+document.getElementById('customersSection')?.addEventListener('click', e => {
+  const editBtn = e.target.closest('.edit-customer');
+  const deleteBtn = e.target.closest('.delete-customer');
+  if (editBtn) {
+    const id = editBtn.dataset.id;
+    const cliente = clientes.find(c => c.id == id);
+    if (cliente) {
+      document.getElementById('editCustId').value = cliente.id;
+      document.getElementById('editCustNombres').value = cliente.nombres;
+      document.getElementById('editCustApellidos').value = cliente.apellidos;
+      document.getElementById('editCustEmail').value = cliente.email;
+      document.getElementById('editCustTelefono').value = cliente.telefono;
+      document.getElementById('editCustDireccion').value = cliente.direccion || '';
+      document.getElementById('editCustEstado').value = cliente.estado;
+      new bootstrap.Modal(document.getElementById('editCustomerModal')).show();
+    }
   }
+  if (deleteBtn) {
+    const id = deleteBtn.dataset.id;
+    Swal.fire({
+      title: '¿Eliminar cliente?', text: 'No se podrá revertir', icon: 'warning',
+      showCancelButton: true, confirmButtonText: 'Sí, eliminar'
+    }).then(result => {
+      if (result.isConfirmed) {
+        fetch(`${API_BASE}/cliente/eliminar/${id}`, { method: 'DELETE' })
+          .then(() => { Swal.fire('Eliminado', '', 'success'); cargarClientes(); })
+          .catch(() => Swal.fire('Error', 'No se pudo eliminar', 'error'));
+      }
+    });
+  }
+});
+
+// Filtros en tiempo real
+document.getElementById('searchCustomers')?.addEventListener('input', () => { currentPage = 1; renderClientesTable(); setupClientesPagination(); });
+document.getElementById('filterStatus')?.addEventListener('change', () => { currentPage = 1; renderClientesTable(); setupClientesPagination(); });
+
+// Paginación
+document.getElementById('customersPagination')?.addEventListener('click', e => {
+  const page = e.target.dataset.page;
+  if (page) {
+    currentPage = parseInt(page);
+    renderClientesTable();
+    setupClientesPagination();
+  }
+});
+
+// Exportar Excel
+document.getElementById('exportCustomersBtn')?.addEventListener('click', () => {
+  const ws = XLSX.utils.json_to_sheet(clientes.map(c => ({
+    Nombres: c.nombres, Apellidos: c.apellidos, Email: c.email,
+    Teléfono: c.telefono, Dirección: c.direccion, Estado: c.estado,
+    Registrado: new Date(c.fechaRegistro).toLocaleDateString('es-CO')
+  })));
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Clientes");
+  XLSX.writeFile(wb, "clientes_delicias_verdes.xlsx");
+});
+
+// Guardar nuevo cliente
+document.getElementById('saveCustomerBtn')?.addEventListener('click', async () => {
+  const payload = {
+    nombres: document.getElementById('custNombres').value,
+    apellidos: document.getElementById('custApellidos').value,
+    email: document.getElementById('custEmail').value,
+    telefono: document.getElementById('custTelefono').value,
+    direccion: document.getElementById('custDireccion').value,
+    password: document.getElementById('custPassword').value,
+    estado: document.getElementById('custEstado').value
+  };
+  try {
+    const res = await fetch(`${API_BASE}/cliente/crear`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error('Error al crear');
+    Swal.fire('Éxito', 'Cliente agregado', 'success');
+    bootstrap.Modal.getInstance(document.getElementById('addCustomerModal')).hide();
+    cargarClientes();
+  } catch (err) {
+    Swal.fire('Error', err.message, 'error');
+  }
+});
+
+// Guardar edición cliente
+document.getElementById('saveEditCustomerBtn')?.addEventListener('click', async () => {
+  const id = document.getElementById('editCustId').value;
+  const payload = {
+    id: parseInt(id),
+    nombres: document.getElementById('editCustNombres').value,
+    apellidos: document.getElementById('editCustApellidos').value,
+    email: document.getElementById('editCustEmail').value,
+    telefono: document.getElementById('editCustTelefono').value,
+    direccion: document.getElementById('editCustDireccion').value,
+    estado: document.getElementById('editCustEstado').value
+  };
+  try {
+    const res = await fetch(`${API_BASE}/cliente/editar`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error('Error al editar');
+    Swal.fire('Éxito', 'Cliente actualizado', 'success');
+    bootstrap.Modal.getInstance(document.getElementById('editCustomerModal')).hide();
+    cargarClientes();
+  } catch (err) {
+    Swal.fire('Error', err.message, 'error');
+  }
+});
+
+// === REPORTES ===
+async function generarReporteUsuarios() {
+  Swal.fire({ title: 'Generando Reporte...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+  const response = await fetch(`${API_BASE}/reporte/usuariosRegistrados`);
+  const blob = await response.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement("a"); a.href = url; a.download = "reporte_usuarios.pdf"; document.body.appendChild(a); a.click(); a.remove();
+  Swal.fire('Éxito', 'Reporte descargado', 'success');
+}
+
+async function generarReporteProductos() {
+  Swal.fire({ title: 'Generando Reporte...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+  const response = await fetch(`${API_BASE}/reporte/productosValidos`);
+  const blob = await response.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement("a"); a.href = url; a.download = "reporte_productos.pdf"; document.body.appendChild(a); a.click(); a.remove();
+  Swal.fire('Éxito', 'Reporte descargado', 'success');
 }
 
 // === INICIO ===
 document.addEventListener('DOMContentLoaded', () => {
   cargarNombreUsuario();
-  renderProductCards();
-  renderProductTable();
-
-  // Cargar dashboard al inicio
-  if (window.location.hash === '' || window.location.hash === '#dashboard') {
-    cargarDashboard();
-  }
+  const hash = window.location.hash.substring(1) || 'dashboard';
+  const link = document.querySelector(`.sidebar-nav a[data-section="${hash}"]`) || document.querySelector('.sidebar-nav a');
+  link.click();
 });
+
+// ===============================================
+// MENÚ DESPLEGABLE DEL USUARIO - FUNCIONA EN ESCRITORIO Y MÓVIL
+// ===============================================
+document.addEventListener('DOMContentLoaded', function () {
+  const userProfile = document.getElementById('userProfile');
+  const userDropdown = document.getElementById('userDropdown');
+
+  // Si no existen los elementos, no hacemos nada
+  if (!userProfile || !userDropdown) {
+    console.warn('No se encontró el menú de usuario');
+    return;
+  }
+
+  // ABRIR Y CERRAR AL HACER CLIC (funciona en PC y móvil)
+  userProfile.addEventListener('click', function (e) {
+    e.stopPropagation();                    // importante
+    userDropdown.classList.toggle('show');  // abre o cierra
+  });
+
+  // CERRAR al hacer clic fuera del menú
+  document.addEventListener('click', function () {
+    userDropdown.classList.remove('show');
+  });
+
+  // Evitar que se cierre si haces clic dentro del menú
+  userDropdown.addEventListener('click', function (e) {
+    e.stopPropagation();
+  });
+});
+
+function cerrarSesion() {
+
+  const btn_cerrarSesion = document.querySelector(".btn-logout");
+
+  if (btn_cerrarSesion) {
+    btn_cerrarSesion.addEventListener("click", () => {
+      localStorage.removeItem("usuario");
+      window.location.href = "../Login/index.html";
+    });
+  }
+
+}
+
+document.addEventListener("DOMContentLoaded", cerrarSesion);
+
+
+

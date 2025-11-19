@@ -1,19 +1,29 @@
 /* ==============================================================
    js/detalle-pedido.js – ADAPTADO A TU JSON REAL
    ============================================================== */
+Swal.fire({
+  title: 'Cargando...',
+  text: 'Por favor espera',
+  allowOutsideClick: false,
+  timerProgressBar: true,
+  didOpen: () => {
+    Swal.showLoading();
+  }
+});
+
 
 const urlParams = new URLSearchParams(window.location.search);
-const idPedido = urlParams.get('id'); // Ej: 1002
+const idPedido = urlParams.get('id'); 
 
 function formatearFecha(iso) {
   if (!iso) return "Sin fecha";
   const d = new Date(iso);
-  return d.toLocaleDateString("es-ES", { 
-    day: "2-digit", 
-    month: "short", 
-    year: "numeric", 
-    hour: "2-digit", 
-    minute: "2-digit" 
+  return d.toLocaleDateString("es-ES", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit"
   });
 }
 
@@ -53,6 +63,8 @@ async function cargarDetalle() {
   try {
     const res = await fetch(`http://localhost:8080/pedidos/${idPedido}/${idUsuario}`);
     if (!res.ok) throw new Error("No se pudo cargar el pedido");
+
+    Swal.close();
 
     const data = await res.json();
 

@@ -2,6 +2,38 @@
        MENU - PERFIL MODERNO + TRANSICIÓN + LOCALSTORAGE
    ========================== */
 
+document.addEventListener("DOMContentLoaded", () => {
+  const usuario = localStorage.getItem("usuario");
+
+
+
+
+
+
+  if (!usuario) {
+
+    localStorage.setItem("redirectAfterLogin", window.location.href);
+    console.log(localStorage.getItem("redirectAfterLogin"));
+
+
+    Swal.fire({
+      icon: "warning",
+      title: "No has iniciado sesión",
+      text: "Por favor inicia sesión para acceder a el menú de platos.",
+      confirmButtonColor: "#2e7d32"
+    }).then(() => {
+      window.location.href = "../Login/index.html";
+
+    });
+
+
+  }
+
+
+});
+
+
+
 // Variables globales
 let PRODUCTS = [];
 let cart = JSON.parse(localStorage.getItem("dv_cart") || "[]");
@@ -31,6 +63,16 @@ function limpiarImagen(valor) {
 
 /* ------------------ CARGAR PRODUCTOS DESDE API ------------------ */
 async function cargarProductos() {
+
+  Swal.fire({
+    title: 'Cargando...',
+    text: 'Por favor espera',
+    allowOutsideClick: false,
+    didOpen: () => {
+      Swal.showLoading();
+    }
+  });
+
   try {
     const response = await fetch("http://localhost:8080/producto/obtener/todos", {
       method: "GET",
@@ -38,6 +80,19 @@ async function cargarProductos() {
     });
 
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    Swal.close();
+
+    const usuarioCred = JSON.parse(localStorage.getItem("usuario"));
+
+    const btn_mis_pedidos = document.querySelector(".position-relative");
+    console.log(btn_mis_pedidos);
+
+    if (usuarioCred.credenciales.rol !== "Usuario") {
+
+      btn_mis_pedidos.style.display = "none";
+    }
+
 
     const data = await response.json();
     if (!Array.isArray(data) || data.length === 0) throw new Error("Sin productos");
@@ -273,8 +328,8 @@ function showQuick(id) {
   modalTitle.textContent = p.title;
 
   const maxLength = 120;
-  const shortDesc = p.desc.length > maxLength 
-    ? p.desc.substring(0, maxLength) + "..." 
+  const shortDesc = p.desc.length > maxLength
+    ? p.desc.substring(0, maxLength) + "..."
     : p.desc;
   modalDesc.textContent = shortDesc;
 
@@ -412,4 +467,8 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
+
 init();
+
+
+

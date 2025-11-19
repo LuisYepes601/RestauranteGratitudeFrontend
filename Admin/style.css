@@ -25,7 +25,7 @@ body {
   position: fixed;
   width: 260px;
   z-index: 1000;
-  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
 }
 
@@ -54,15 +54,16 @@ body {
   display: flex;
   align-items: center;
   padding: 12px 15px;
-  color: rgba(255,255,255,0.8);
+  color: rgba(255, 255, 255, 0.8);
   text-decoration: none;
   border-radius: 8px;
   margin-bottom: 8px;
   transition: all 0.3s;
 }
 
-.sidebar-nav a:hover, .sidebar-nav a.active {
-  background: rgba(255,255,255,0.1);
+.sidebar-nav a:hover,
+.sidebar-nav a.active {
+  background: rgba(255, 255, 255, 0.1);
   color: white;
 }
 
@@ -169,7 +170,7 @@ body {
   right: 0;
   background: white;
   border-radius: 10px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
   width: 200px;
   padding: 10px 0;
   z-index: 1000;
@@ -203,7 +204,7 @@ body {
 .stats-card {
   border: none;
   border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   transition: all 0.3s;
   background: white;
   padding: 25px 20px;
@@ -225,7 +226,7 @@ body {
 
 .stats-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
 .stats-card i {
@@ -251,19 +252,28 @@ body {
   font-weight: 500;
 }
 
-.trend.up { color: #28a745; }
-.trend.down { color: #dc3545; }
+.trend.up {
+  color: #28a745;
+}
+
+.trend.down {
+  color: #dc3545;
+}
 
 /* Tables */
-.recent-orders, .products-table, .reservations-table {
+.recent-orders,
+.products-table,
+.reservations-table {
   border: none;
   border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   background: white;
   padding: 25px;
 }
 
-.recent-orders h5, .products-table h5, .reservations-table h5 {
+.recent-orders h5,
+.products-table h5,
+.reservations-table h5 {
   font-weight: 600;
   color: var(--primary-color);
   margin-bottom: 20px;
@@ -290,12 +300,24 @@ body {
   font-weight: 500;
 }
 
-.delivered { background: #d4edda; color: #155724; }
-.pending { background: #fff3cd; color: #856404; }
-.cancelled { background: #f8d7da; color: #721c24; }
+.delivered {
+  background: #d4edda;
+  color: #155724;
+}
+
+.pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.cancelled {
+  background: #f8d7da;
+  color: #721c24;
+}
 
 /* Buttons */
-.btn-outline-primary, .btn-primary {
+.btn-outline-primary,
+.btn-primary {
   transition: all 0.3s;
 }
 
@@ -320,34 +342,59 @@ body {
   border-color: var(--secondary-color);
 }
 
-/* Product Cards */
+/* === PRODUCT CARDS - FIJAR ALTURA Y ALINEAR === */
 .product-card {
   border: none;
   border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   background: white;
-  padding: 20px;
+  padding: 16px;
   transition: all 0.3s;
   height: 100%;
-}
-
-.product-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .product-card img {
   width: 100%;
-  height: 180px;
+  height: 160px;
   object-fit: cover;
   border-radius: 8px;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
+}
+
+.product-card .card-body {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0;
 }
 
 .product-card h6 {
   font-weight: 600;
   color: var(--primary-color);
-  margin-bottom: 5px;
+  margin: 0 0 8px 0;
+  font-size: 1rem;
+  line-height: 1.3;
+  height: 2.6rem;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.product-card .text-muted {
+  font-size: 0.85rem;
+  margin-bottom: 10px;
+  flex-grow: 1;
+  height: 3.2rem;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  line-height: 1.4;
 }
 
 .product-card .price {
@@ -361,18 +408,10 @@ body {
   color: var(--primary-color);
   font-weight: 500;
   border-radius: 20px;
-  padding: 3px 10px;
-  font-size: 0.8rem;
-  display: inline-block;
-  margin-bottom: 10px;
-}
-
-/* Admin Forms */
-.admin-form {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-  padding: 25px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  align-self: flex-start;
+  margin-bottom: 8px;
 }
 
 /* View Toggle */
@@ -403,19 +442,22 @@ body {
   padding: 1.5rem;
   display: flex;
   align-items: center;
+  flex: 1;
   gap: 1rem;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
   border: 1px solid #e0e0e0;
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  height: 30vh;
 }
 
 .report-card-dashboard::before {
   content: '';
   position: absolute;
-  top: 0; left: 0;
+  top: 0;
+  left: 0;
   width: 5px;
   height: 100%;
   background: var(--primary-color);
@@ -429,7 +471,7 @@ body {
 
 .report-card-dashboard:hover {
   transform: translateY(-8px);
-  box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
 }
 
 .report-icon {
@@ -444,13 +486,33 @@ body {
   flex-shrink: 0;
 }
 
-.bg-primary { background: linear-gradient(135deg, #0d6efd, #0dcaf0); }
-.bg-success { background: linear-gradient(135deg, #198754, #20c997); }
-.bg-warning { background: linear-gradient(135deg, #ffc107, #fd7e14); }
-.bg-danger { background: linear-gradient(135deg, #dc3545, #fd7e14); }
+.bg-primary {
+  background: linear-gradient(135deg, #0d6efd, #0dcaf0);
+}
 
-.report-info h5 { margin: 0 0 0.4rem; font-weight: 700; color: #333; }
-.report-info p { margin: 0; font-size: 0.9rem; color: #666; }
+.bg-success {
+  background: linear-gradient(135deg, #198754, #20c997);
+}
+
+.bg-warning {
+  background: linear-gradient(135deg, #ffc107, #fd7e14);
+}
+
+.bg-danger {
+  background: linear-gradient(135deg, #dc3545, #fd7e14);
+}
+
+.report-info h5 {
+  margin: 0 0 0.4rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.report-info p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #666;
+}
 
 .report-action {
   margin-left: auto;
@@ -466,29 +528,141 @@ body {
 
 /* Responsive */
 @media (max-width: 991.98px) {
-  .sidebar { transform: translateX(-100%); }
-  .sidebar.show { transform: translateX(0); }
-  .menu-toggle { display: block; }
-  .search-box { width: 200px; }
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar.show {
+    transform: translateX(0);
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .search-box {
+    width: 200px;
+  }
 }
 
 @media (max-width: 767.98px) {
-  .main-content { padding: 20px 15px; }
-  .header { flex-direction: column; align-items: flex-start; gap: 15px; }
-  .header h2 { font-size: 1.5rem; }
-  .header-actions { width: 100%; justify-content: space-between; }
-  .search-box { width: 60%; }
-  .user-name { display: none; }
-  .stats-card { margin-bottom: 20px; }
+  .main-content {
+    padding: 20px 15px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .header h2 {
+    font-size: 1.5rem;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .search-box {
+    width: 60%;
+  }
+
+  .user-name {
+    display: none;
+  }
+
+  .stats-card {
+    margin-bottom: 20px;
+  }
 }
 
 .sidebar-overlay {
   position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background: rgba(0, 0, 0, 0.5);
   z-index: 999;
   display: none;
 }
 
-.sidebar-overlay.show { display: block; }
+.sidebar-overlay.show {
+  display: block;
+}
+
+/* Responsive - Ajustar tarjetas en móviles */
+@media (max-width: 576px) {
+  .product-card img {
+    height: 140px;
+  }
+
+  .product-card h6 {
+    height: 2.4rem;
+    font-size: 0.95rem;
+  }
+
+  .product-card .text-muted {
+    height: 2.8rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* === VISTAS UNIFICADAS === */
+.products-view {
+  transition: all 0.3s ease;
+}
+
+.products-view.hidden {
+  opacity: 0;
+  visibility: hidden;
+  position: absolute;
+  left: -9999px;
+  width: 100%;
+}
+
+/* Forzar re-layout del grid */
+.row.g-4 {
+  display: flex;
+  flex-wrap: wrap;
+  margin: -1rem;
+}
+
+.row.g-4>[class*="col-"] {
+  padding: 1rem;
+}
+
+#productsGridView .col-lg-3,
+#productsGridView .col-md-4,
+#productsGridView .col-sm-6 {
+  display: flex;
+}
+
+/* Asegurar que las tarjetas se alineen */
+.product-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}.user-dropdown {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  width: 200px;
+  padding: 10px 0;
+  z-index: 1000;
+  display: none;           /* oculto por defecto */
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+}
+
+.user-dropdown.show {
+  display: block !important;
+  opacity: 1;
+  visibility: visible;
+}

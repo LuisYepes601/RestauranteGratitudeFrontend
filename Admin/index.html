@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,17 +13,18 @@
   <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
   <!-- Sidebar Overlay -->
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
-  
+
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
     <div class="sidebar-brand">
       <h1>Restaurante Gratitude</h1>
       <p>Panel de Administración</p>
     </div>
-    
+
     <div class="sidebar-nav">
       <a href="#" class="active" data-section="dashboard">
         <i class="fas fa-home"></i>
@@ -69,20 +71,19 @@
           <i class="fas fa-search"></i>
           <input type="text" class="form-control" placeholder="Buscar...">
         </div>
-        
+
         <!-- User Profile -->
         <div class="user-profile" id="userProfile">
-          <div class="user-avatar">AV</div>
           <div class="user-name">Administrador</div>
           <i class="fas fa-chevron-down ms-2"></i>
-          
+
           <!-- Dropdown Menu -->
           <div class="user-dropdown" id="userDropdown">
-            <a href="#"><i class="fas fa-user"></i> Mi Perfil</a>
+            <a href="\perfil\perfil.html"><i class="fas fa-user"></i> Mi Perfil</a>
             <a href="#"><i class="fas fa-cog"></i> Configuración</a>
-            <a href=""><i class="fas fa-store"></i> Ver Tienda</a>
+            <a href="\Menu\index.html"><i class="fas fa-store"></i> Ver Tienda</a>
             <div class="dropdown-divider"></div>
-            <a href="#"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+            <a href="#" class="btn-logout"><i class="fas fa-sign-out-alt "></i> Cerrar Sesión</a>
           </div>
         </div>
       </div>
@@ -161,7 +162,8 @@
               <tr>
                 <td>
                   <div class="d-flex align-items-center">
-                    <div class="user-avatar me-2" style="width: 30px; height: 30px; font-size: 0.8rem; background: #f59e0b;">JS</div>
+                    <div class="user-avatar me-2"
+                      style="width: 30px; height: 30px; font-size: 0.8rem; background: #f59e0b;">JS</div>
                     Jane Smith
                   </div>
                 </td>
@@ -260,10 +262,10 @@
       </div>
 
       <!-- Products Grid View -->
-      <div id="productsGridView" class="row g-4"></div>
+      <div id="productsGridView" class="products-view row g-4"></div>
 
       <!-- Products Table View -->
-      <div id="productsTableView" style="display: none;">
+      <div id="productsTableView" class="products-view" style="display: none;">
         <div class="products-table">
           <div class="table-responsive">
             <table class="table">
@@ -285,207 +287,73 @@
       </div>
     </div>
 
-    <!-- Orders Section -->
-    <div id="ordersSection" class="section-content" style="display: none;">
-      <h3 class="mb-4">Gestión de Pedidos</h3>
-      <div class="orders-table">
-        <div class="table-responsive">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>ID Pedido</th>
-                <th>Cliente</th>
-                <th>Productos</th>
-                <th>Total</th>
-                <th>Fecha</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>#ORD-001</td>
-                <td>John Doe</td>
-                <td>Tarta de fresa, Café gourmet</td>
-                <td>$10.30</td>
-                <td>18 Oct, 2025</td>
-                <td><span class="status delivered">Entregado</span></td>
-                <td>
-                  <button class="btn btn-sm btn-outline-primary me-1">Ver</button>
-                  <button class="btn btn-sm btn-outline-success">Marcar</button>
-                </td>
-              </tr>
-              <tr>
-                <td>#ORD-002</td>
-                <td>Jane Smith</td>
-                <td>Helado artesano</td>
-                <td>$6.00</td>
-                <td>19 Oct, 2025</td>
-                <td><span class="status pending">Pendiente</span></td>
-                <td>
-                  <button class="btn btn-sm btn-outline-primary me-1">Ver</button>
-                  <button class="btn btn-sm btn-outline-success">Marcar</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- Reservations Section -->
-    <div id="reservationsSection" class="section-content" style="display: none;">
-      <h3 class="mb-4">Gestión de Reservas</h3>
-      <div class="reservations-table">
-        <div class="table-responsive">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>ID Reserva</th>
-                <th>Cliente</th>
-                <th>Fecha/Hora</th>
-                <th>Personas</th>
-                <th>Contacto</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>#RES-001</td>
-                <td>Carlos Ruiz</td>
-                <td>Hoy, 19:30</td>
-                <td>4</td>
-                <td>carlos@email.com</td>
-                <td><span class="status pending">Por confirmar</span></td>
-                <td>
-                  <button class="btn btn-sm btn-outline-success me-1">Confirmar</button>
-                  <button class="btn btn-sm btn-outline-danger">Cancelar</button>
-                </td>
-              </tr>
-              <tr>
-                <td>#RES-002</td>
-                <td>Maria Lopez</td>
-                <td>Mañana, 14:00</td>
-                <td>2</td>
-                <td>+34 612 345 678</td>
-                <td><span class="status delivered">Confirmada</span></td>
-                <td>
-                  <button class="btn btn-sm btn-outline-primary me-1">Editar</button>
-                  <button class="btn btn-sm btn-outline-danger">Cancelar</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
     <!-- Customers Section -->
     <div id="customersSection" class="section-content" style="display: none;">
-      <h3 class="mb-4">Gestión de Clientes</h3>
-      <div class="customers-table">
-        <div class="table-responsive">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Cliente</th>
-                <th>Email</th>
-                <th>Teléfono</th>
-                <th>Pedidos</th>
-                <th>Última Visita</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <div class="d-flex align-items-center">
-                    <div class="user-avatar me-2">JD</div>
-                    John Doe
-                  </div>
-                </td>
-                <td>john@email.com</td>
-                <td>+34 600 123 456</td>
-                <td>12</td>
-                <td>18 Oct, 2025</td>
-                <td>
-                  <button class="btn btn-sm btn-outline-primary me-1">Ver</button>
-                  <button class="btn btn-sm btn-outline-success">Email</button>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="d-flex align-items-center">
-                    <div class="user-avatar me-2" style="background: #f59e0b;">JS</div>
-                    Jane Smith
-                  </div>
-                </td>
-                <td>jane@email.com</td>
-                <td>+34 611 234 567</td>
-                <td>8</td>
-                <td>19 Oct, 2025</td>
-                <td>
-                  <button class="btn btn-sm btn-outline-primary me-1">Ver</button>
-                  <button class="btn btn-sm btn-outline-success">Email</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3>Gestión de Clientes</h3>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCustomerModal">
+          <i class="fas fa-plus me-2"></i>Agregar Cliente
+        </button>
+      </div>
+
+      <!-- Filtros y búsqueda -->
+      <div class="row mb-4">
+        <div class="col-md-4">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchCustomers" class="form-control"
+              placeholder="Buscar por nombre, email o teléfono...">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <select class="form-select" id="filterStatus">
+            <option value="">Todos los estados</option>
+            <option value="Activo">Activo</option>
+            <option value="Inactivo">Inactivo</option>
+            <option value="Bloqueado">Bloqueado</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <button class="btn btn-outline-secondary" id="exportCustomersBtn">
+            <i class="fas fa-file-excel me-2"></i>Exportar Excel
+          </button>
         </div>
       </div>
-    </div>
 
-    <!-- Settings Section -->
-    <div id="settingsSection" class="section-content" style="display: none;">
-      <h3 class="mb-4">Configuración del Sistema</h3>
-      <div class="admin-form">
-        <h5 class="mb-3">Información del Restaurante</h5>
-        <form>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="mb-3">
-                <label class="form-label">Nombre del Restaurante</label>
-                <input type="text" class="form-control" value="Delicias Verdes">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="mb-3">
-                <label class="form-label">Eslogan</label>
-                <input type="text" class="form-control" value="Repostería • Heladería • Panadería • Gourmet">
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="mb-3">
-                <label class="form-label">Teléfono</label>
-                <input type="text" class="form-control" value="+34 912 345 678">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="mb-3">
-                <label class="form-label">Email</label>
-                <input type="email" class="form-control" value="info@deliciasverdes.com">
-              </div>
-            </div>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Dirección</label>
-            <textarea class="form-control" rows="2">Calle Principal 123, Madrid, España</textarea>
-          </div>
-          <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-        </form>
+      <!-- Tabla de clientes -->
+      <div class="table-responsive">
+        <table class="table table-hover" id="customersTable">
+          <thead class="table-light">
+            <tr>
+              <th>Foto</th>
+              <th>Nombre Completo</th>
+              <th>Email</th>
+              <th>Teléfono</th>
+              <th>Dirección</th>
+              <th>Registrado</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <!-- Paginación -->
+      <div class="d-flex justify-content-between align-items-center mt-3">
+        <p id="customersCount">Mostrando 0 de 0 clientes</p>
+        <nav>
+          <ul class="pagination pagination-sm" id="customersPagination"></ul>
+        </nav>
       </div>
     </div>
 
-    <!-- REPORTS SECTION (OCULTA) -->
+    <!-- REPORTS SECTION -->
     <div id="reportsSection" class="section-content" style="display: none;">
       <h3 class="mb-4">Generar Reportes</h3>
-      
-      <div class="row g-4">
+      <div class="row g-4 padre_reportes">
         <div class="col-lg-3 col-md-6">
-          <div class="report-card-dashboard" onclick="generarReporte('clientes')">
+          <div class="report-card-dashboard" onclick="generarReporteUsuarios()">
             <div class="report-icon bg-primary">
               <i class="fas fa-users"></i>
             </div>
@@ -498,9 +366,8 @@
             </div>
           </div>
         </div>
-
         <div class="col-lg-3 col-md-6">
-          <div class="report-card-dashboard" onclick="generarReporte('productos')">
+          <div class="report-card-dashboard" onclick="generarReporteProductos()">
             <div class="report-icon bg-success">
               <i class="fas fa-box"></i>
             </div>
@@ -514,107 +381,131 @@
           </div>
         </div>
 
-        <div class="col-lg-3 col-md-6">
-          <div class="report-card-dashboard" onclick="generarReporte('pedidos')">
-            <div class="report-icon bg-warning">
-              <i class="fas fa-shopping-bag"></i>
-            </div>
-            <div class="report-info">
-              <h5>Reporte de Pedidos</h5>
-              <p>Pedidos por fecha y estado</p>
-            </div>
-            <div class="report-action">
-              <i class="fas fa-file-pdf"></i>
-            </div>
-          </div>
-        </div>
 
-        <div class="col-lg-3 col-md-6">
-          <div class="report-card-dashboard" onclick="generarReporte('ventas')">
-            <div class="report-icon bg-danger">
-              <i class="fas fa-chart-line"></i>
-            </div>
-            <div class="report-info">
-              <h5>Reporte de Ventas</h5>
-              <p>Ingresos diarios y mensuales</p>
-            </div>
-            <div class="report-action">
-              <i class="fas fa-file-pdf"></i>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
 
   <!-- Add Product Modal -->
   <div class="modal fade" id="addProductModal" tabindex="-1">
+    <!-- ... (tu modal de productos actual) ... -->
+  </div>
+
+  <!-- Edit Product Modal -->
+  <div class="modal fade" id="editProductModal" tabindex="-1">
+    <!-- ... (tu modal de edición actual) ... -->
+  </div>
+
+  <!-- Add Customer Modal -->
+  <div class="modal fade" id="addCustomerModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Agregar Nuevo Producto</h5>
+          <h5 class="modal-title">Agregar Nuevo Cliente</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
-          <form>
-            <div class="row">
+          <form id="addCustomerForm">
+            <div class="row g-3">
               <div class="col-md-6">
-                <div class="mb-3">
-                  <label class="form-label">Nombre del Producto</label>
-                  <input type="text" class="form-control" placeholder="Ej: Tarta de Chocolate">
-                </div>
+                <label class="form-label">Nombres</label>
+                <input type="text" class="form-control" id="custNombres" required>
               </div>
               <div class="col-md-6">
-                <div class="mb-3">
-                  <label class="form-label">Categoría</label>
-                  <select class="form-select">
-                    <option value="">Seleccionar categoría</option>
-                    <option>Repostería</option>
-                    <option>Heladería</option>
-                    <option>Panadería</option>
-                    <option>Gourmet</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="mb-3">
-                  <label class="form-label">Precio</label>
-                  <input type="number" step="0.01" class="form-control" placeholder="0.00">
-                </div>
+                <label class="form-label">Apellidos</label>
+                <input type="text" class="form-control" id="custApellidos" required>
               </div>
               <div class="col-md-6">
-                <div class="mb-3">
-                  <label class="form-label">Stock Disponible</label>
-                  <input type="number" class="form-control" placeholder="0">
-                </div>
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" id="custEmail" required>
               </div>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Descripción</label>
-              <textarea class="form-control" rows="3" placeholder="Descripción del producto"></textarea>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Imagen del Producto</label>
-              <input type="file" class="form-control">
+              <div class="col-md-6">
+                <label class="form-label">Teléfono</label>
+                <input type="text" class="form-control" id="custTelefono" required>
+              </div>
+              <div class="col-md-12">
+                <label class="form-label">Dirección</label>
+                <input type="text" class="form-control" id="custDireccion" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="custPassword" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Estado</label>
+                <select class="form-select" id="custEstado">
+                  <option value="Activo">Activo</option>
+                  <option value="Inactivo">Inactivo</option>
+                </select>
+              </div>
             </div>
           </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-primary">Guardar Producto</button>
+          <button type="button" class="btn btn-primary" id="saveCustomerBtn">Guardar Cliente</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Bootstrap JS -->
+  <!-- Edit Customer Modal -->
+  <div class="modal fade" id="editCustomerModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Editar Cliente</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="editCustomerForm">
+            <input type="hidden" id="editCustId">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Nombres</label>
+                <input type="text" class="form-control" id="editCustNombres" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Apellidos</label>
+                <input type="text" class="form-control" id="editCustApellidos" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" id="editCustEmail" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Teléfono</label>
+                <input type="text" class="form-control" id="editCustTelefono" required>
+              </div>
+              <div class="col-md-12">
+                <label class="form-label">Dirección</label>
+                <input type="text" class="form-control" id="editCustDireccion" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Estado</label>
+                <select class="form-select" id="editCustEstado">
+                  <option value="Activo">Activo</option>
+                  <option value="Inactivo">Inactivo</option>
+                  <option value="Bloqueado">Bloqueado</option>
+                </select>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary" id="saveEditCustomerBtn">Guardar Cambios</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- SweetAlert2 -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <!-- jsPDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="script.js"></script>
 </body>
+
 </html>

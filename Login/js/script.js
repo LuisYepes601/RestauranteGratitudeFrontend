@@ -9,16 +9,14 @@ function mostrarNotificacion(mensaje) {
   tarjeta.style.display = "block";
 
   setTimeout(() => {
-    tarjeta.style.display = "none"; // ← CORREGIDO: faltaba =
+    tarjeta.style.display = "none"; 
   }, 5000);
 }
 
 // === RUTAS POR ROL ===
 const RUTAS_POR_ROL = {
-  "admin": "../Admin/dashboard.html",
-  "administrador": "../Admin/dashboard.html",
+  "administrador": "../Admin/index.html",
   "moderador": "../Moderacion/panel.html",
-  "cliente": "../Menu/index.html",
   "usuario": "../Menu/index.html"
 };
 
@@ -29,7 +27,7 @@ function obtenerRol(usuario) {
   return usuario?.credenciales?.rol ||
     usuario?.rol ||
     usuario?.tipo ||
-    "cliente";
+    "usuario";
 }
 
 // === VALIDAR RUTA SEGÚN ROL ===

@@ -2,6 +2,9 @@
    gestionPerfil.js – PERFIL COMPLETO + MEJORAS (TODO EN UNO)
    ============================================================== */
 
+
+
+
 let datosUsuario = {};
 let archivoSeleccionado = null;
 let cropper = null;
@@ -19,10 +22,21 @@ function safe(value, fallback = "Sin información") {
   return value === null || value === undefined || value === "" ? fallback : value;
 }
 
+const main = document.querySelector(".container");
+main.style.display="none";
 /* ==============================================================
    CARGAR PERFIL
    ============================================================== */
 async function obtenerPerfil() {
+
+  Swal.fire({
+    title: 'Cargando...',
+    text: 'Por favor espera',
+    allowOutsideClick: false,
+    didOpen: () => {
+      Swal.showLoading();
+    }
+  });
   try {
     const usuario = JSON.parse(localStorage.getItem("usuario"));
     const id = usuario?.credenciales?.id;
@@ -34,7 +48,11 @@ async function obtenerPerfil() {
       headers: { "Content-Type": "application/json" },
     });
 
+
+
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    Swal.close();
+    main.style.display="block";
 
     const data = await response.json();
     datosUsuario = data;
@@ -83,49 +101,77 @@ function cargarPerfil(data) {
   img.src = fotoUrl !== "Sin información" ? fotoUrl : defaultUrl;
 
   const botonVolver = document.querySelector(".back-menu a");
+  console.log(data.rol);
+
   const rol = safe(data.rol).trim();
-  botonVolver.href = rol === "Usuario" ? "/Menu/index.html" : "/home";
+  botonVolver.href = rol === "Usuario" ? "/Menu/index.html" : "/Menu/index.html";
+  botonVolver.href = rol === "Administrador" ? "/Admin/index.html" : "/Menu/index.html";
 }
 
 /* ==============================================================
    MEJORAS: ESTADÍSTICAS + PEDIDOS RECIENTES
    ============================================================== */
 async function cargarMejoras() {
+
   const container = document.getElementById("ultimosPedidos");
 
   try {
     const usuario = JSON.parse(localStorage.getItem("usuario"));
     const id = usuario?.credenciales?.id;
-    if (!id) {
-      container.innerHTML = `<p class="text-muted text-center">No hay usuario</p>`;
-      return;
+    const rol = usuario.credenciales.rol;
+
+    if (rol == "Usuario") {
+
+
+
+      if (!id) {
+        container.innerHTML = `<p class="text-muted text-center">No hay usuario</p>`;
+        return;
+      }
+
+
+      // NUEVO ENDPOINT: /pedidos/recientes/usuario/{id}?limite=2
+      const pedidosRes = await fetch(`http://localhost:8080/pedidos/recientes/usuario/${id}?limite=3`);
+
+
+      if (!pedidosRes.ok) {
+        container.innerHTML = `<p class="text-muted text-center">No hay pedidos recientes</p>`;
+        return;
+      }
+      Swal.close();
+      main.style.display="block";
+
+      const pedidos = await pedidosRes.json();
+
+      if (!pedidos || pedidos.length === 0) {
+        container.innerHTML = `<p class="text-muted text-center">No hay pedidos recientes</p>`;
+        return;
+      }
+
+      // Cargar estadísticas (usando solo los pedidos recientes)
+      cargarEstadisticas(pedidos);
+
+      // Cargar pedidos recientes
+      cargarUltimosPedidos(pedidos);
     }
 
-    // NUEVO ENDPOINT: /pedidos/recientes/usuario/{id}?limite=2
-    const pedidosRes = await fetch(`http://localhost:8080/pedidos/recientes/usuario/${id}?limite=3`);
+    if (rol == "Administrador") {
 
-    if (!pedidosRes.ok) {
-      container.innerHTML = `<p class="text-muted text-center">No hay pedidos recientes</p>`;
-      return;
+      const pedidos_recientes = document.querySelector(".pedidos_recientes");
+      const estadisticas = document.querySelector(".estadisticas");
+
+      estadisticas.style.display = "none";
+      pedidos_recientes.style.display = "none";
     }
-
-    const pedidos = await pedidosRes.json();
-
-    if (!pedidos || pedidos.length === 0) {
-      container.innerHTML = `<p class="text-muted text-center">No hay pedidos recientes</p>`;
-      return;
-    }
-
-    // Cargar estadísticas (usando solo los pedidos recientes)
-    cargarEstadisticas(pedidos);
-
-    // Cargar pedidos recientes
-    cargarUltimosPedidos(pedidos);
 
   } catch (err) {
     console.error("Error al cargar pedidos recientes:", err);
     container.innerHTML = `<p class="text-muted text-center">Error de conexión</p>`;
   }
+
+
+
+
 }
 
 function cargarEstadisticas(pedidos) {

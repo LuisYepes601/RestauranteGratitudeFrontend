@@ -1,6 +1,8 @@
 // =====================================================
 // 🔒 Mostrar / Ocultar contraseña
 // =====================================================
+
+
 function togglePassword(id) {
     const input = document.getElementById(id);
     const icon = input.nextElementSibling.querySelector("i");
@@ -111,12 +113,12 @@ document.addEventListener("DOMContentLoaded", () => {
             sexo: form.sexo.value
         };
 
-        // Añadir código de rol si aplica
+
         if (rol !== "Usuario") {
             dataUsuario.codigoRol = form.codigoRol.value.trim();
         }
 
-        // 🌐 Seleccionar endpoint y cuerpo
+
         let endpoint;
         let data;
 
@@ -131,7 +133,6 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("📤 Enviando datos a:", endpoint);
         console.log("🧾 Contenido:", data);
 
-        // 🚀 Enviar datos al servidor
         try {
             Swal.fire({
                 title: "Procesando...",
@@ -151,7 +152,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             Swal.close();
 
-            // 💬 Manejar respuestas
             if (status >= 200 && status < 300) {
                 if (rol === "Usuario") {
                     await Swal.fire({
@@ -171,7 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         text: "Datos enviados exitosamente.",
                         confirmButtonColor: "#3085d6"
                     });
-                    window.location.href = "datosEducativos.html";
+                    window.location.href = "/Registro/infoEducativa.html";
                 }
             } else if (status >= 400 && status < 500) {
                 Swal.fire({
