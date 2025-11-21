@@ -20,6 +20,25 @@ let clientes = [];
 let currentPage = 1;
 const itemsPerPage = 10;
 
+// === CAMBIO ENTRE VISTA CUADRÍCULA Y TABLA (NUEVO) ===
+document.getElementById('gridViewBtn')?.addEventListener('click', function () {
+  document.getElementById('gridViewBtn').classList.add('active');
+  document.getElementById('tableViewBtn').classList.remove('active');
+  document.getElementById('productsGridView').style.display = 'flex';
+  document.getElementById('productsGridView').classList.remove('hidden');
+  document.getElementById('productsTableView').style.display = 'none';
+  document.getElementById('productsTableView').classList.add('hidden');
+});
+
+document.getElementById('tableViewBtn')?.addEventListener('click', function () {
+  document.getElementById('tableViewBtn').classList.add('active');
+  document.getElementById('gridViewBtn').classList.remove('active');
+  document.getElementById('productsTableView').style.display = 'block';
+  document.getElementById('productsTableView').classList.remove('hidden');
+  document.getElementById('productsGridView').style.display = 'none';
+  document.getElementById('productsGridView').classList.add('hidden');
+});
+
 // === CARGAR NOMBRE DE USUARIO ===
 function cargarNombreUsuario() {
   const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
@@ -68,12 +87,14 @@ async function cargarProductos() {
     })) : [];
     renderProductCards();
     renderProductTable();
+    document.getElementById('gridViewBtn').click(); // Vista por defecto
     Swal.close();
   } catch (error) {
     console.error(error);
     Swal.fire('Error', 'No se pudieron cargar los productos', 'error');
     productos = [{ id: 1, nombre: 'Tarta de Fresa', precio: 15.99, descripcion: 'Deliciosa tarta', imagen: 'https://via.placeholder.com/300x200', categoria: 'Repostería', id_categoria: 1, valorcontenido: '250', tipoContenido: 'Gramos', id_tipo_contenido: 2 }];
     renderProductCards(); renderProductTable();
+    document.getElementById('gridViewBtn').click();
   }
 }
 
@@ -367,49 +388,186 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ===============================================
-// MENÚ DESPLEGABLE DEL USUARIO - FUNCIONA EN ESCRITORIO Y MÓVIL
+// MENÚ DESPLEGABLE DEL USUARIO
 // ===============================================
 document.addEventListener('DOMContentLoaded', function () {
   const userProfile = document.getElementById('userProfile');
   const userDropdown = document.getElementById('userDropdown');
 
-  // Si no existen los elementos, no hacemos nada
   if (!userProfile || !userDropdown) {
     console.warn('No se encontró el menú de usuario');
     return;
   }
 
-  // ABRIR Y CERRAR AL HACER CLIC (funciona en PC y móvil)
   userProfile.addEventListener('click', function (e) {
-    e.stopPropagation();                    // importante
-    userDropdown.classList.toggle('show');  // abre o cierra
+    e.stopPropagation();
+    userDropdown.classList.toggle('show');
   });
 
-  // CERRAR al hacer clic fuera del menú
   document.addEventListener('click', function () {
     userDropdown.classList.remove('show');
   });
 
-  // Evitar que se cierre si haces clic dentro del menú
   userDropdown.addEventListener('click', function (e) {
     e.stopPropagation();
   });
 });
 
 function cerrarSesion() {
-
   const btn_cerrarSesion = document.querySelector(".btn-logout");
-
   if (btn_cerrarSesion) {
     btn_cerrarSesion.addEventListener("click", () => {
       localStorage.removeItem("usuario");
       window.location.href = "../Login/index.html";
     });
   }
-
 }
-
 document.addEventListener("DOMContentLoaded", cerrarSesion);
+// === PREVISUALIZACIÓN DE IMAGEN ===
+document.getElementById('productImagen')?.addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  const preview = document.getElementById('imagePreview');
+  const container = document.getElementById('previewContainer');
 
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      preview.src = ev.target.result;
+      container.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  } else {
+    container.style.display = 'none';
+    preview.src = '';
+  }
+});
 
+// === ABRIR MODAL PARA EDITAR PRODUCTO ===
+document.getElementById('productsSection')?.addEventListener('click', e => {
+  const editBtn = e.target.closest('.edit-product');
+  if (editBtn) {
+    const id = editBtn.dataset.id;
+    const producto = productos.find(p => p.id == id);
+    if (!producto) return;
 
+    // Rellenar formulario
+    document.getElementById('productModalTitle').textContent = 'Editar Producto';
+    document.getElementById('editProductId').value = producto.id;
+    document.getElementById('productNombre').value = producto.nombre;
+    document.getElementById('productPrecio').value = producto.precio;
+    document.getElementById('productDescripcion').value = producto.descripcion;
+    document.getElementById('productCategoria').value = producto.categoria;
+    document.getElementById('productValorContenido').value = producto.valorcontenido || '';
+    document.getElementById('productTipoContenido').value = producto.tipoContenido || '';
+    document.getElementById('productCantidad').value = producto.cantidad || 40;
+    document.getElementById('productCantidadMin').value = producto.cantidadMin || 10;
+    document.getElementById('productCantidadMax').value = producto.cantidadMax || 100;
+
+    // Mostrar imagen actual
+    if (producto.imagen) {
+      document.getElementById('imagePreview').src = producto.imagen;
+      document.getElementById('previewContainer').style.display = 'block';
+    }
+
+    new bootstrap.Modal(document.getElementById('addProductModal')).show();
+  }
+});
+
+// === GUARDAR PRODUCTO (CREAR O EDITAR) ===
+document.getElementById('saveProductBtn')?.addEventListener('click', async function() {
+  const editId = document.getElementById('editProductId').value;
+  const esEdicion = editId && editId !== '';
+
+  const formData = new FormData();
+  const imagenFile = document.getElementById('productImagen').files[0];
+
+  const productoData = {
+    nombre: document.getElementById('productNombre').value.trim(),
+    precio: parseFloat(document.getElementById('productPrecio').value),
+    descripcion: document.getElementById('productDescripcion').value.trim(),
+    categoria: document.getElementById('productCategoria').value,
+    valorcontenido: parseInt(document.getElementById('productValorContenido').value) || 0,
+    tipoContenido: document.getElementById('productTipoContenido').value,
+    fecha_ingreso: new Date().toISOString().split('T')[0] + "T00:00:00",
+    cantidad: parseInt(document.getElementById('productCantidad').value),
+    cantidadMax: parseInt(document.getElementById('productCantidadMax').value),
+    cantidadMin: parseInt(document.getElementById('productCantidadMin').value)
+  };
+
+  // Solo agregar id si es edición
+  if (esEdicion) {
+    productoData.id = parseInt(editId);
+  }
+
+  formData.append('producto', new Blob([JSON.stringify(productoData)], { type: 'application/json' }));
+  if (imagenFile) {
+    formData.append('imagen', imagenFile);
+  }
+
+  const url = esEdicion 
+    ? `${API_BASE}/producto/editar` 
+    : `${API_BASE}/producto/crear`;
+
+  const method = esEdicion ? 'PUT' : 'POST';
+
+  try {
+    document.getElementById('saveProductText').textContent = 'Guardando...';
+    this.disabled = true;
+
+    const response = await fetch(url, {
+      method: method,
+      body: formData
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      throw new Error(error || 'Error del servidor');
+    }
+
+    const result = await response.json();
+    Swal.fire('Éxito', esEdicion ? 'Producto actualizado' : 'Producto creado correctamente', 'success');
+    
+    bootstrap.Modal.getInstance(document.getElementById('addProductModal')).hide();
+    cargarProductos(); // Recargar lista
+
+  } catch (err) {
+    console.error(err);
+    Swal.fire('Error', err.message || 'No se pudo guardar el producto', 'error');
+  } finally {
+    this.disabled = false;
+    document.getElementById('saveProductText').textContent = 'Guardar Producto';
+  }
+});
+
+// === REINICIAR MODAL AL CERRAR ===
+document.getElementById('addProductModal')?.addEventListener('hidden.bs.modal', function () {
+  document.getElementById('productForm').reset();
+  document.getElementById('editProductId').value = '';
+  document.getElementById('productModalTitle').textContent = 'Agregar Nuevo Producto';
+  document.getElementById('previewContainer').style.display = 'none';
+  document.getElementById('imagePreview').src = '';
+});
+
+// === ELIMINAR PRODUCTO ===
+document.getElementById('productsSection')?.addEventListener('click', e => {
+  const deleteBtn = e.target.closest('.delete-product');
+  if (deleteBtn) {
+    const id = deleteBtn.dataset.id;
+    Swal.fire({
+      title: '¿Eliminar producto?',
+      text: 'Esta acción no se puede deshacer',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar'
+    }).then(result => {
+      if (result.isConfirmed) {
+        fetch(`${API_BASE}/producto/eliminar/byId/${id}`, { method: 'DELETE' })
+          .then(() => {
+            Swal.fire('Eliminado', '', 'success');
+            cargarProductos();
+          })
+          .catch(() => Swal.fire('Error', 'No se pudo eliminar', 'error'));
+      }
+    });
+  }
+});

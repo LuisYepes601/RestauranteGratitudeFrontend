@@ -86,11 +86,15 @@ async function cargarProductos() {
     const usuarioCred = JSON.parse(localStorage.getItem("usuario"));
 
     const btn_mis_pedidos = document.querySelector(".position-relative");
+    const btn_carrito = document.querySelector(".btn-car")
     console.log(btn_mis_pedidos);
+    
 
     if (usuarioCred.credenciales.rol !== "Usuario") {
 
       btn_mis_pedidos.style.display = "none";
+      btn_carrito.style.display = "none";
+
     }
 
 

@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
 document.addEventListener("DOMContentLoaded", () => {
     const btnHome = document.getElementById("btnHome");
     btnHome.addEventListener("click", () => {
-        window.location.href = "../index.html"; // 🔹 Redirige a tu página principal
+        window.location.href = "/Menu/index.html"; // 🔹 Redirige a tu página principal
     });
 });
 

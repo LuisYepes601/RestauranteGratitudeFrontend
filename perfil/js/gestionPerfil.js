@@ -23,7 +23,7 @@ function safe(value, fallback = "Sin información") {
 }
 
 const main = document.querySelector(".container");
-main.style.display="none";
+main.style.display = "none";
 /* ==============================================================
    CARGAR PERFIL
    ============================================================== */
@@ -52,7 +52,7 @@ async function obtenerPerfil() {
 
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     Swal.close();
-    main.style.display="block";
+    main.style.display = "block";
 
     const data = await response.json();
     datosUsuario = data;
@@ -139,7 +139,7 @@ async function cargarMejoras() {
         return;
       }
       Swal.close();
-      main.style.display="block";
+      main.style.display = "block";
 
       const pedidos = await pedidosRes.json();
 
@@ -361,12 +361,20 @@ document.getElementById("formCambiarContrasena").addEventListener("submit", asyn
   const confirmar = document.getElementById("confirmarContrasena").value;
   const usuario = JSON.parse(localStorage.getItem("usuario"));
 
-  if (!actual || !nueva || !confirmar) return Swal.fire("Warning", "Completa todos los campos", "warning");
-  if (nueva.length < 6) return Swal.fire("Warning", "Mínimo 6 caracteres", "warning");
-  if (nueva !== confirmar) return Swal.fire("Error", "No coinciden", "error");
+  if (!actual || !nueva || !confirmar) 
+    return Swal.fire("Warning", "Completa todos los campos", "warning");
 
+  if (nueva.length < 6) 
+    return Swal.fire("Warning", "Mínimo 6 caracteres", "warning");
+
+  if (nueva !== confirmar) 
+    return Swal.fire("Error", "No coinciden", "error");
+
+  // *** CAMBIO REALIZADO AQUÍ ***
+  console.log(usuario);
+  
   const datos = {
-    email: safe(datosUsuario.correo, usuario.credenciales.correo),
+    email: usuario.credenciales.correo,  // ← CORREGIDO
     contraseaActual: actual,
     contraseñaNueva: nueva
   };
@@ -383,6 +391,8 @@ document.getElementById("formCambiarContrasena").addEventListener("submit", asyn
     if (!response.ok) throw new Error(await response.text() || "Error");
 
     await Swal.fire({ icon: "success", title: "¡Cambiada!", text: "Vuelve a iniciar sesión.", timer: 3000 });
+    localStorage.removeItem("usuario");
+    window.location.href = "/Login/index.html";
     cerrarModalContrasena();
 
   } catch (error) {
