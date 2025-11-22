@@ -34,21 +34,9 @@
         <i class="fas fa-box"></i>
         <span>Productos</span>
       </a>
-      <a href="#" data-section="orders">
-        <i class="fas fa-shopping-bag"></i>
-        <span>Pedidos</span>
-      </a>
-      <a href="#" data-section="reservations">
-        <i class="fas fa-calendar-alt"></i>
-        <span>Reservas</span>
-      </a>
       <a href="#" data-section="customers">
         <i class="fas fa-users"></i>
-        <span>Clientes</span>
-      </a>
-      <a href="#" data-section="settings">
-        <i class="fas fa-cog"></i>
-        <span>Configuración</span>
+        <span>Usuarios</span>
       </a>
       <a href="#" data-section="reports">
         <i class="fas fa-chart-bar"></i>
@@ -286,28 +274,24 @@
       </div>
     </div>
 
-    <!-- Customers Section -->
+    <!-- USUARIOS SECTION (ANTES CLIENTES) -->
     <div id="customersSection" class="section-content" style="display: none;">
       <div class="d-flex justify-content-between align-items-center mb-4">
-        <h3>Gestión de Clientes</h3>
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCustomerModal">
-          <i class="fas fa-plus me-2"></i>Agregar Cliente
-        </button>
+        <h3>Gestión de Usuarios</h3>
       </div>
 
       <div class="row mb-4">
         <div class="col-md-4">
           <div class="search-box">
             <i class="fas fa-search"></i>
-            <input type="text" id="searchCustomers" class="form-control" placeholder="Buscar por nombre, email o teléfono...">
+            <input type="text" id="searchCustomers" class="form-control" placeholder="Buscar por nombre o email...">
           </div>
         </div>
         <div class="col-md-3">
           <select class="form-select" id="filterStatus">
             <option value="">Todos los estados</option>
-            <option value="Activo">Activo</option>
-            <option value="Inactivo">Inactivo</option>
-            <option value="Bloqueado">Bloqueado</option>
+            <option value="Activa">Activa</option>
+            <option value="Inactiva">Inactiva</option>
           </select>
         </div>
         <div class="col-md-3">
@@ -322,11 +306,9 @@
           <thead class="table-light">
             <tr>
               <th>Foto</th>
-              <th>Nombre Completo</th>
+              <th>Nombre</th>
               <th>Email</th>
-              <th>Teléfono</th>
-              <th>Dirección</th>
-              <th>Registrado</th>
+              <th>Fecha Registro</th>
               <th>Estado</th>
               <th>Acciones</th>
             </tr>
@@ -336,7 +318,7 @@
       </div>
 
       <div class="d-flex justify-content-between align-items-center mt-3">
-        <p id="customersCount">Mostrando 0 de 0 clientes</p>
+        <p id="customersCount">Mostrando 0 de 0 usuarios</p>
         <nav>
           <ul class="pagination pagination-sm" id="customersPagination"></ul>
         </nav>
@@ -379,163 +361,89 @@
     </div>
   </div>
 
-  <!-- Modales (Add/Edit Customer) -->
-  <!-- (Los modales están exactamente como los tenías, los dejo completos) -->
-  <div class="modal fade" id="addCustomerModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Agregar Nuevo Cliente</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <form id="addCustomerForm">
-            <div class="row g-3">
-              <div class="col-md-6"><label class="form-label">Nombres</label><input type="text" class="form-control" id="custNombres" required></div>
-              <div class="col-md-6"><label class="form-label">Apellidos</label><input type="text" class="form-control" id="custApellidos" required></div>
-              <div class="col-md-6"><label class="form-label">Email</label><input type="email" class="form-control" id="custEmail" required></div>
-              <div class="col-md-6"><label class="form-label">Teléfono</label><input type="text" class="form-control" id="custTelefono" required></div>
-              <div class="col-md-12"><label class="form-label">Dirección</label><input type="text" class="form-control" id="custDireccion" required></div>
-              <div class="col-md-6"><label class="form-label">Contraseña</label><input type="password" class="form-control" id="custPassword" required></div>
-              <div class="col-md-6"><label class="form-label">Estado</label>
-                <select class="form-select" id="custEstado">
-                  <option value="Activo">Activo</option>
-                  <option value="Inactivo">Inactivo</option>
-                </select>
-              </div>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-primary" id="saveCustomerBtn">Guardar Cliente</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="editCustomerModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Editar Cliente</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <form id="editCustomerForm">
-            <input type="hidden" id="editCustId">
-            <div class="row g-3">
-              <div class="col-md-6"><label class="form-label">Nombres</label><input type="text" class="form-control" id="editCustNombres" required></div>
-              <div class="col-md-6"><label class="form-label">Apellidos</label><input type="text" class="form-control" id="editCustApellidos" required></div>
-              <div class="col-md-6"><label class="form-label">Email</label><input type="email" class="form-control" id="editCustEmail" required></div>
-              <div class="col-md-6"><label class="form-label">Teléfono</label><input type="text" class="form-control" id="editCustTelefono" required></div>
-              <div class="col-md-12"><label class="form-label">Dirección</label><input type="text390" class="form-control" id="editCustDireccion" required></div>
-              <div class="col-md-6"><label class="form-label">Estado</label>
-                <select class="form-select" id="editCustEstado">
-                  <option value="Activo">Activo</option>
-                  <option value="Inactivo">Inactivo</option>
-                  <option value="Bloqueado">Bloqueado</option>
-                </select>
-              </div>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-primary" id="saveEditCustomerBtn">Guardar Cambios</button>
-        </div>
-      </div>
-    </div>
-  </div>
   <!-- Modal Agregar/Editar Producto -->
-<div class="modal fade" id="addProductModal" tabindex="-1">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="productModalTitle">Agregar Nuevo Producto</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <form id="productForm">
-          <input type="hidden" id="editProductId">
-
-          <div class="row g-3">
-            <div class="col-md-8">
-              <label class="form-label">Nombre del Producto</label>
-              <input type="text" class="form-control" id="productNombre" required>
-            </div>
-            <div class="col-md-4">
-              <label class="form-label">Precio</label>
-              <input type="number" step="100" class="form-control" id="productPrecio" required>
-            </div>
-
-            <div class="col-12">
-              <label class="form-label">Descripción</label>
-              <textarea class="form-control" id="productDescripcion" rows="3" required></textarea>
-            </div>
-
-            <div class="col-md-4">
-              <label class="form-label">Categoría</label>
-              <select class="form-select" id="productCategoria" required>
-                <option value="">Seleccionar...</option>
-                <option value="Repostería">Repostería</option>
-                <option value="Heladería">Heladería</option>
-                <option value="Panadería">Panadería</option>
-                <option value="Gourmet">Gourmet</option>
-                <option value="Bebidas">Bebidas</option>
-              </select>
-            </div>
-
-            <div class="col-md-4">
-              <label class="form-label">Cantidad (contenido)</label>
-              <input type="number" class="form-control" id="productValorContenido" placeholder="Ej: 250" required>
-            </div>
-            <div class="col-md-4">
-              <label class="form-label">Tipo de Contenido</label>
-              <select class="form-select" id="productTipoContenido" required>
-                <option value="">Seleccionar...</option>
-                <option value="Gramos">Gramos</option>
-                <option value="Kilogramos">Kilogramos</option>
-                <option value="Mililitros">Mililitros</option>
-                <option value="Litros">Litros</option>
-                <option value="Unidad">Unidad</option>
-                <option value="Porción">Porción</option>
-                <option value="Docena">Docena</option>
-              </select>
-            </div>
-
-            <div class="col-md-4">
-              <label class="form-label">Stock Actual</label>
-              <input type="number" class="form-control" id="productCantidad" value="40" required>
-            </div>
-            <div class="col-md-4">
-              <label class="form-label">Stock Mínimo</label>
-              <input type="number" class="form-control" id="productCantidadMin" value="10" required>
-            </div>
-            <div class="col-md-4">
-              <label class="form-label">Stock Máximo</label>
-              <input type="number" class="form-control" id="productCantidadMax" value="100" required>
-            </div>
-
-            <div class="col-12">
-              <label class="form-label">Imagen del Producto</label>
-              <input type="file" class="form-control" id="productImagen" accept="image/*">
-              <div class="mt-2 text-center" id="previewContainer" style="display:none;">
-                <img id="imagePreview" src="" alt="Vista previa" style="max-width:100%; max-height:300px; border-radius:8px;">
+  <div class="modal fade" id="addProductModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="productModalTitle">Agregar Nuevo Producto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="productForm">
+            <input type="hidden" id="editProductId">
+            <div class="row g-3">
+              <div class="col-md-8">
+                <label class="form-label">Nombre del Producto</label>
+                <input type="text" class="form-control" id="productNombre" required>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Precio</label>
+                <input type="number" step="100" class="form-control" id="productPrecio" required>
+              </div>
+              <div class="col-12">
+                <label class="form-label">Descripción</label>
+                <textarea class="form-control" id="productDescripcion" rows="3" required></textarea>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Categoría</label>
+                <select class="form-select" id="productCategoria" required>
+                  <option value="">Seleccionar...</option>
+                  <option value="Repostería">Repostería</option>
+                  <option value="Heladería">Heladería</option>
+                  <option value="Panadería">Panadería</option>
+                  <option value="Gourmet">Gourmet</option>
+                  <option value="Bebidas">Bebidas</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Cantidad (contenido)</label>
+                <input type="number" class="form-control" id="productValorContenido" placeholder="Ej: 250" required>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Tipo de Contenido</label>
+                <select class="form-select" id="productTipoContenido" required>
+                  <option value="">Seleccionar...</option>
+                  <option value="Gramos">Gramos</option>
+                  <option value="Kilogramos">Kilogramos</option>
+                  <option value="Mililitros">Mililitros</option>
+                  <option value="Litros">Litros</option>
+                  <option value="Unidad">Unidad</option>
+                  <option value="Porción">Porción</option>
+                  <option value="Docena">Docena</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Stock Actual</label>
+                <input type="number" class="form-control" id="productCantidad" value="40" required>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Stock Mínimo</label>
+                <input type="number" class="form-control" id="productCantidadMin" value="10" required>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Stock Máximo</label>
+                <input type="number" class="form-control" id="productCantidadMax" value="100" required>
+              </div>
+              <div class="col-12">
+                <label class="form-label">Imagen del Producto</label>
+                <input type="file" class="form-control" id="productImagen" accept="image/*">
+                <div class="mt-2 text-center" id="previewContainer" style="display:none;">
+                  <img id="imagePreview" src="" alt="Vista previa" style="max-width:100%; max-height:300px; border-radius:8px;">
+                </div>
               </div>
             </div>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-primary" id="saveProductBtn">
-          <span id="saveProductText">Guardar Producto</span>
-        </button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary" id="saveProductBtn">
+            <span id="saveProductText">Guardar Producto</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

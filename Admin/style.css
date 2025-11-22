@@ -350,7 +350,7 @@ body {
   border-color: var(--secondary-color);
 }
 
-/* PRODUCT CARDS - DESCRIPCIÓN NUNCA SE DESBORDA */
+/* PRODUCT CARDS */
 .product-card {
   border: none;
   border-radius: 12px;
@@ -453,7 +453,7 @@ body {
   display: none !important;
 }
 
-/* REPORT CARDS - 100% RESPONSIVAS */
+/* REPORT CARDS */
 .report-card-dashboard {
   background: white;
   border-radius: 18px;
@@ -659,7 +659,6 @@ body {
   background-color: var(--gray-color);
   color: white;
   border: none;
-
 }
 
 #gridViewBtn {

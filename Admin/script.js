@@ -7,7 +7,6 @@ const CATEGORIAS_MAP = {
 };
 const CATEGORIAS_INVERSO = { 1: 'Repostería', 2: 'Heladería', 3: 'Panadería', 4: 'Gourmet', 5: 'Bebidas' };
 
-// === MAPEO TIPOS DE CONTENIDO ===
 const TIPOS_CONTENIDO_MAP = {
   'Unidad': 5, 'Gramos': 2, 'Kilogramos': 1, 'Mililitros': 4, 'Litros': 3,
   'Onzas': 6, 'Libras': 7, 'Paquete': 8, 'Caja': 9, 'Botella': 10,
@@ -16,33 +15,29 @@ const TIPOS_CONTENIDO_MAP = {
 
 // === VARIABLES GLOBALES ===
 let productos = [];
-let clientes = [];
-let currentPage = 1;
-const itemsPerPage = 10;
+let usuarios = [];
+let currentPageUsuarios = 1;
+const itemsPerPageUsuarios = 10;
 
-// === CAMBIO ENTRE VISTA CUADRÍCULA Y TABLA (NUEVO) ===
+// === VISTA PRODUCTOS (GRID / TABLA) ===
 document.getElementById('gridViewBtn')?.addEventListener('click', function () {
   document.getElementById('gridViewBtn').classList.add('active');
   document.getElementById('tableViewBtn').classList.remove('active');
   document.getElementById('productsGridView').style.display = 'flex';
-  document.getElementById('productsGridView').classList.remove('hidden');
   document.getElementById('productsTableView').style.display = 'none';
-  document.getElementById('productsTableView').classList.add('hidden');
 });
 
 document.getElementById('tableViewBtn')?.addEventListener('click', function () {
   document.getElementById('tableViewBtn').classList.add('active');
   document.getElementById('gridViewBtn').classList.remove('active');
   document.getElementById('productsTableView').style.display = 'block';
-  document.getElementById('productsTableView').classList.remove('hidden');
   document.getElementById('productsGridView').style.display = 'none';
-  document.getElementById('productsGridView').classList.add('hidden');
 });
 
 // === CARGAR NOMBRE DE USUARIO ===
 function cargarNombreUsuario() {
   const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
-  const nombre = usuario.credenciales?.nombre || 'Usuario';
+  const nombre = usuario.credenciales?.nombre || 'Administrador';
   const el = document.querySelector('.user-name');
   if (el) el.textContent = nombre;
 }
@@ -87,14 +82,13 @@ async function cargarProductos() {
     })) : [];
     renderProductCards();
     renderProductTable();
-    document.getElementById('gridViewBtn').click(); // Vista por defecto
+    document.getElementById('gridViewBtn').click();
     Swal.close();
   } catch (error) {
     console.error(error);
     Swal.fire('Error', 'No se pudieron cargar los productos', 'error');
-    productos = [{ id: 1, nombre: 'Tarta de Fresa', precio: 15.99, descripcion: 'Deliciosa tarta', imagen: 'https://via.placeholder.com/300x200', categoria: 'Repostería', id_categoria: 1, valorcontenido: '250', tipoContenido: 'Gramos', id_tipo_contenido: 2 }];
+    productos = [];
     renderProductCards(); renderProductTable();
-    document.getElementById('gridViewBtn').click();
   }
 }
 
@@ -153,81 +147,153 @@ function renderProductTable() {
   });
 }
 
-// === CLIENTES ===
-async function cargarClientes() {
-  Swal.fire({ title: 'Cargando Clientes...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+// === USUARIOS ===
+async function cargarUsuarios() {
+  Swal.fire({ title: 'Cargando Usuarios...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
   try {
-    const response = await fetch(`${API_BASE}/cliente/obtener/todos`);
-    if (!response.ok) throw new Error('Error clientes');
-    clientes = await response.json();
-    renderClientesTable();
-    setupClientesPagination();
+    const response = await fetch(`${API_BASE}/user/all`);
+    if (!response.ok) throw new Error('Error al cargar usuarios');
+    usuarios = await response.json();
+
+    usuarios = usuarios.map(u => ({
+      ...u,
+      estado: u.estado === 'Activa' ? 'Activa' : 'Inactiva'
+    }));
+
+    renderUsuariosTable();
+    setupUsuariosPagination();
     Swal.close();
   } catch (error) {
     console.error(error);
-    Swal.fire('Error', 'No se pudieron cargar los clientes', 'error');
-    clientes = [];
-    renderClientesTable();
+    Swal.fire('Error', 'No se pudieron cargar los usuarios', 'error');
+    usuarios = [];
+    renderUsuariosTable();
   }
 }
 
-function renderClientesTable() {
+function renderUsuariosTable() {
   const tbody = document.querySelector('#customersTable tbody');
-  const search = document.getElementById('searchCustomers')?.value.toLowerCase() || '';
+  const search = (document.getElementById('searchCustomers')?.value || '').toLowerCase();
   const statusFilter = document.getElementById('filterStatus')?.value || '';
 
-  let filtered = clientes.filter(c => {
-    const matchSearch = `${c.nombres} ${c.apellidos} ${c.email} ${c.telefono}`.toLowerCase().includes(search);
-    const matchStatus = !statusFilter || c.estado === statusFilter;
+  let filtered = usuarios.filter(u => {
+    const matchSearch = (u.nombre || '').toLowerCase().includes(search) || 
+                        (u.email || '').toLowerCase().includes(search);
+    const matchStatus = !statusFilter || u.estado === statusFilter;
     return matchSearch && matchStatus;
   });
 
-  const start = (currentPage - 1) * itemsPerPage;
-  const end = start + itemsPerPage;
+  const start = (currentPageUsuarios - 1) * itemsPerPageUsuarios;
+  const end = start + itemsPerPageUsuarios;
   const pageData = filtered.slice(start, end);
 
   tbody.innerHTML = '';
   if (pageData.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="8" class="text-center text-muted py-4">No se encontraron clientes.</td></tr>`;
-    document.getElementById('customersCount').textContent = `Mostrando 0 de ${filtered.length}`;
+    tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-4">No se encontraron usuarios.</td></tr>`;
+    document.getElementById('customersCount').textContent = `Mostrando 0 de ${filtered.length} usuarios`;
     return;
   }
 
-  pageData.forEach(c => {
-    const estadoClass = c.estado === 'Activo' ? 'delivered' : c.estado === 'Inactivo' ? 'pending' : 'cancelled';
-    const foto = c.foto || 'https://via.placeholder.com/40?text=U';
+  pageData.forEach(u => {
+    const estadoClass = u.estado === 'Activa' ? 'delivered' : 'pending';
+    const foto = u.foto || 'https://via.placeholder.com/40?text=U';
+    const fecha = new Date(u.fechaRegistro).toLocaleDateString('es-CO');
+
     tbody.innerHTML += `
       <tr>
-        <td><img src="${foto}" alt="foto" class="rounded-circle" width="40" height="40"></td>
-        <td class="align-middle">${c.nombres} ${c.apellidos}</td>
-        <td class="align-middle">${c.email}</td>
-        <td class="align-middle">${c.telefono}</td>
-        <td class="align-middle text-truncate" style="max-width: 180px;">${c.direccion || 'Sin dirección'}</td>
-        <td class="align-middle">${new Date(c.fechaRegistro).toLocaleDateString('es-CO')}</td>
-        <td class="align-middle"><span class="status ${estadoClass}">${c.estado}</span></td>
+        <td><img src="${foto}" alt="foto" class="rounded-circle" width="40" height="40" onerror="this.src='https://via.placeholder.com/40?text=U'"></td>
+        <td class="align-middle">${u.nombre || 'Sin nombre'}</td>
+        <td class="align-middle">${u.email}</td>
+        <td class="align-middle">${fecha}</td>
+        <td class="align-middle"><span class="status ${estadoClass}">${u.estado}</span></td>
         <td class="align-middle">
-          <button class="btn btn-sm btn-outline-primary me-1 edit-customer" data-id="${c.id}"><i class="fas fa-edit"></i></button>
-          <button class="btn btn-sm btn-outline-danger delete-customer" data-id="${c.id}"><i class="fas fa-trash"></i></button>
+          <button class="btn btn-sm btn-outline-primary" title="Ver detalles" onclick="verDetalleUsuario('${u.email}')">
+            <i class="fas fa-eye"></i>
+          </button>
         </td>
       </tr>`;
   });
-  document.getElementById('customersCount').textContent = `Mostrando ${start + 1}-${Math.min(end, filtered.length)} de ${filtered.length} clientes`;
+
+  document.getElementById('customersCount').textContent = 
+    `Mostrando ${start + 1}-${Math.min(end, filtered.length)} de ${filtered.length} usuarios`;
 }
 
-function setupClientesPagination() {
-  const totalFiltered = clientes.filter(c => {
-    const search = document.getElementById('searchCustomers')?.value.toLowerCase() || '';
-    const status = document.getElementById('filterStatus')?.value || '';
-    return `${c.nombres} ${c.apellidos} ${c.email}`.toLowerCase().includes(search) && (!status || c.estado === status);
+function setupUsuariosPagination() {
+  const search = (document.getElementById('searchCustomers')?.value || '').toLowerCase();
+  const status = document.getElementById('filterStatus')?.value || '';
+  const totalFiltered = usuarios.filter(u => {
+    const matchSearch = (u.nombre || '').toLowerCase().includes(search) || (u.email || '').toLowerCase().includes(search);
+    const matchStatus = !status || u.estado === status;
+    return matchSearch && matchStatus;
   }).length;
 
-  const pages = Math.ceil(totalFiltered / itemsPerPage);
+  const pages = Math.ceil(totalFiltered / itemsPerPageUsuarios);
   const pagination = document.getElementById('customersPagination');
   pagination.innerHTML = '';
+
   for (let i = 1; i <= pages; i++) {
-    pagination.innerHTML += `<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
+    pagination.innerHTML += `
+      <li class="page-item ${i === currentPageUsuarios ? 'active' : ''}">
+        <a class="page-link" href="#" data-page="${i}">${i}</a>
+      </li>`;
   }
 }
+
+function verDetalleUsuario(email) {
+  const usuario = usuarios.find(u => u.email === email);
+  if (!usuario) return;
+
+  Swal.fire({
+    title: usuario.nombre || 'Usuario',
+    html: `
+      <p><strong>Email:</strong> ${usuario.email}</p>
+      <p><strong>Estado:</strong> ${usuario.estado}</p>
+      <p><strong>Registrado:</strong> ${new Date(usuario.fechaRegistro).toLocaleString('es-CO')}</p>
+      ${usuario.ciudad ? `<p><strong>Ciudad:</strong> ${usuario.ciudad}</p>` : ''}
+    `,
+    imageUrl: usuario.foto || undefined,
+    imageAlt: 'Foto de perfil',
+    imageWidth: 150,
+    imageHeight: 150,
+  });
+}
+
+// Filtros y paginación
+document.getElementById('searchCustomers')?.addEventListener('input', () => {
+  currentPageUsuarios = 1;
+  renderUsuariosTable();
+  setupUsuariosPagination();
+});
+
+document.getElementById('filterStatus')?.addEventListener('change', () => {
+  currentPageUsuarios = 1;
+  renderUsuariosTable();
+  setupUsuariosPagination();
+});
+
+document.getElementById('customersPagination')?.addEventListener('click', e => {
+  const page = e.target.dataset.page;
+  if (page) {
+    e.preventDefault();
+    currentPageUsuarios = parseInt(page);
+    renderUsuariosTable();
+    setupUsuariosPagination();
+  }
+});
+
+document.getElementById('exportCustomersBtn')?.addEventListener('click', () => {
+  const datosExport = usuarios.map(u => ({
+    Nombre: u.nombre || 'Sin nombre',
+    Email: u.email,
+    Estado: u.estado,
+    "Fecha Registro": new Date(u.fechaRegistro).toLocaleDateString('es-CO')
+  }));
+
+  const ws = XLSX.utils.json_to_sheet(datosExport);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Usuarios");
+  XLSX.writeFile(wb, "usuarios_delicias_verdes.xlsx");
+});
 
 // === NAVEGACIÓN ===
 document.querySelectorAll('.sidebar-nav a').forEach(link => {
@@ -248,116 +314,11 @@ document.querySelectorAll('.sidebar-nav a').forEach(link => {
     const section = this.getAttribute('data-section');
     if (section === 'dashboard') cargarDashboard();
     else if (section === 'products') cargarProductos();
-    else if (section === 'customers') { currentPage = 1; cargarClientes(); }
-  });
-});
-
-// === EVENTOS CLIENTES ===
-document.getElementById('customersSection')?.addEventListener('click', e => {
-  const editBtn = e.target.closest('.edit-customer');
-  const deleteBtn = e.target.closest('.delete-customer');
-  if (editBtn) {
-    const id = editBtn.dataset.id;
-    const cliente = clientes.find(c => c.id == id);
-    if (cliente) {
-      document.getElementById('editCustId').value = cliente.id;
-      document.getElementById('editCustNombres').value = cliente.nombres;
-      document.getElementById('editCustApellidos').value = cliente.apellidos;
-      document.getElementById('editCustEmail').value = cliente.email;
-      document.getElementById('editCustTelefono').value = cliente.telefono;
-      document.getElementById('editCustDireccion').value = cliente.direccion || '';
-      document.getElementById('editCustEstado').value = cliente.estado;
-      new bootstrap.Modal(document.getElementById('editCustomerModal')).show();
+    else if (section === 'customers') { 
+      currentPageUsuarios = 1; 
+      cargarUsuarios(); 
     }
-  }
-  if (deleteBtn) {
-    const id = deleteBtn.dataset.id;
-    Swal.fire({
-      title: '¿Eliminar cliente?', text: 'No se podrá revertir', icon: 'warning',
-      showCancelButton: true, confirmButtonText: 'Sí, eliminar'
-    }).then(result => {
-      if (result.isConfirmed) {
-        fetch(`${API_BASE}/cliente/eliminar/${id}`, { method: 'DELETE' })
-          .then(() => { Swal.fire('Eliminado', '', 'success'); cargarClientes(); })
-          .catch(() => Swal.fire('Error', 'No se pudo eliminar', 'error'));
-      }
-    });
-  }
-});
-
-// Filtros en tiempo real
-document.getElementById('searchCustomers')?.addEventListener('input', () => { currentPage = 1; renderClientesTable(); setupClientesPagination(); });
-document.getElementById('filterStatus')?.addEventListener('change', () => { currentPage = 1; renderClientesTable(); setupClientesPagination(); });
-
-// Paginación
-document.getElementById('customersPagination')?.addEventListener('click', e => {
-  const page = e.target.dataset.page;
-  if (page) {
-    currentPage = parseInt(page);
-    renderClientesTable();
-    setupClientesPagination();
-  }
-});
-
-// Exportar Excel
-document.getElementById('exportCustomersBtn')?.addEventListener('click', () => {
-  const ws = XLSX.utils.json_to_sheet(clientes.map(c => ({
-    Nombres: c.nombres, Apellidos: c.apellidos, Email: c.email,
-    Teléfono: c.telefono, Dirección: c.direccion, Estado: c.estado,
-    Registrado: new Date(c.fechaRegistro).toLocaleDateString('es-CO')
-  })));
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "Clientes");
-  XLSX.writeFile(wb, "clientes_delicias_verdes.xlsx");
-});
-
-// Guardar nuevo cliente
-document.getElementById('saveCustomerBtn')?.addEventListener('click', async () => {
-  const payload = {
-    nombres: document.getElementById('custNombres').value,
-    apellidos: document.getElementById('custApellidos').value,
-    email: document.getElementById('custEmail').value,
-    telefono: document.getElementById('custTelefono').value,
-    direccion: document.getElementById('custDireccion').value,
-    password: document.getElementById('custPassword').value,
-    estado: document.getElementById('custEstado').value
-  };
-  try {
-    const res = await fetch(`${API_BASE}/cliente/crear`, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
-    });
-    if (!res.ok) throw new Error('Error al crear');
-    Swal.fire('Éxito', 'Cliente agregado', 'success');
-    bootstrap.Modal.getInstance(document.getElementById('addCustomerModal')).hide();
-    cargarClientes();
-  } catch (err) {
-    Swal.fire('Error', err.message, 'error');
-  }
-});
-
-// Guardar edición cliente
-document.getElementById('saveEditCustomerBtn')?.addEventListener('click', async () => {
-  const id = document.getElementById('editCustId').value;
-  const payload = {
-    id: parseInt(id),
-    nombres: document.getElementById('editCustNombres').value,
-    apellidos: document.getElementById('editCustApellidos').value,
-    email: document.getElementById('editCustEmail').value,
-    telefono: document.getElementById('editCustTelefono').value,
-    direccion: document.getElementById('editCustDireccion').value,
-    estado: document.getElementById('editCustEstado').value
-  };
-  try {
-    const res = await fetch(`${API_BASE}/cliente/editar`, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
-    });
-    if (!res.ok) throw new Error('Error al editar');
-    Swal.fire('Éxito', 'Cliente actualizado', 'success');
-    bootstrap.Modal.getInstance(document.getElementById('editCustomerModal')).hide();
-    cargarClientes();
-  } catch (err) {
-    Swal.fire('Error', err.message, 'error');
-  }
+  });
 });
 
 // === REPORTES ===
@@ -387,17 +348,12 @@ document.addEventListener('DOMContentLoaded', () => {
   link.click();
 });
 
-// ===============================================
-// MENÚ DESPLEGABLE DEL USUARIO
-// ===============================================
+// === MENÚ USUARIO ===
 document.addEventListener('DOMContentLoaded', function () {
   const userProfile = document.getElementById('userProfile');
   const userDropdown = document.getElementById('userDropdown');
 
-  if (!userProfile || !userDropdown) {
-    console.warn('No se encontró el menú de usuario');
-    return;
-  }
+  if (!userProfile || !userDropdown) return;
 
   userProfile.addEventListener('click', function (e) {
     e.stopPropagation();
@@ -423,7 +379,8 @@ function cerrarSesion() {
   }
 }
 document.addEventListener("DOMContentLoaded", cerrarSesion);
-// === PREVISUALIZACIÓN DE IMAGEN ===
+
+// === PREVISUALIZACIÓN IMAGEN PRODUCTO ===
 document.getElementById('productImagen')?.addEventListener('change', function(e) {
   const file = e.target.files[0];
   const preview = document.getElementById('imagePreview');
@@ -442,7 +399,7 @@ document.getElementById('productImagen')?.addEventListener('change', function(e)
   }
 });
 
-// === ABRIR MODAL PARA EDITAR PRODUCTO ===
+// === EDITAR / GUARDAR PRODUCTO ===
 document.getElementById('productsSection')?.addEventListener('click', e => {
   const editBtn = e.target.closest('.edit-product');
   if (editBtn) {
@@ -450,7 +407,6 @@ document.getElementById('productsSection')?.addEventListener('click', e => {
     const producto = productos.find(p => p.id == id);
     if (!producto) return;
 
-    // Rellenar formulario
     document.getElementById('productModalTitle').textContent = 'Editar Producto';
     document.getElementById('editProductId').value = producto.id;
     document.getElementById('productNombre').value = producto.nombre;
@@ -463,7 +419,6 @@ document.getElementById('productsSection')?.addEventListener('click', e => {
     document.getElementById('productCantidadMin').value = producto.cantidadMin || 10;
     document.getElementById('productCantidadMax').value = producto.cantidadMax || 100;
 
-    // Mostrar imagen actual
     if (producto.imagen) {
       document.getElementById('imagePreview').src = producto.imagen;
       document.getElementById('previewContainer').style.display = 'block';
@@ -473,7 +428,6 @@ document.getElementById('productsSection')?.addEventListener('click', e => {
   }
 });
 
-// === GUARDAR PRODUCTO (CREAR O EDITAR) ===
 document.getElementById('saveProductBtn')?.addEventListener('click', async function() {
   const editId = document.getElementById('editProductId').value;
   const esEdicion = editId && editId !== '';
@@ -494,7 +448,6 @@ document.getElementById('saveProductBtn')?.addEventListener('click', async funct
     cantidadMin: parseInt(document.getElementById('productCantidadMin').value)
   };
 
-  // Solo agregar id si es edición
   if (esEdicion) {
     productoData.id = parseInt(editId);
   }
@@ -504,51 +457,36 @@ document.getElementById('saveProductBtn')?.addEventListener('click', async funct
     formData.append('imagen', imagenFile);
   }
 
-  const url = esEdicion 
-    ? `${API_BASE}/producto/editar` 
-    : `${API_BASE}/producto/crear`;
-
+  const url = esEdicion ? `${API_BASE}/producto/editar` : `${API_BASE}/producto/crear`;
   const method = esEdicion ? 'PUT' : 'POST';
 
   try {
     document.getElementById('saveProductText').textContent = 'Guardando...';
     this.disabled = true;
 
-    const response = await fetch(url, {
-      method: method,
-      body: formData
-    });
+    const response = await fetch(url, { method, body: formData });
+    if (!response.ok) throw new Error('Error del servidor');
 
-    if (!response.ok) {
-      const error = await response.text();
-      throw new Error(error || 'Error del servidor');
-    }
-
-    const result = await response.json();
-    Swal.fire('Éxito', esEdicion ? 'Producto actualizado' : 'Producto creado correctamente', 'success');
-    
+    Swal.fire('Éxito', esEdicion ? 'Producto actualizado' : 'Producto creado', 'success');
     bootstrap.Modal.getInstance(document.getElementById('addProductModal')).hide();
-    cargarProductos(); // Recargar lista
+    cargarProductos();
 
   } catch (err) {
     console.error(err);
-    Swal.fire('Error', err.message || 'No se pudo guardar el producto', 'error');
+    Swal.fire('Error', err.message || 'No se pudo guardar', 'error');
   } finally {
     this.disabled = false;
     document.getElementById('saveProductText').textContent = 'Guardar Producto';
   }
 });
 
-// === REINICIAR MODAL AL CERRAR ===
 document.getElementById('addProductModal')?.addEventListener('hidden.bs.modal', function () {
   document.getElementById('productForm').reset();
   document.getElementById('editProductId').value = '';
   document.getElementById('productModalTitle').textContent = 'Agregar Nuevo Producto';
   document.getElementById('previewContainer').style.display = 'none';
-  document.getElementById('imagePreview').src = '';
 });
 
-// === ELIMINAR PRODUCTO ===
 document.getElementById('productsSection')?.addEventListener('click', e => {
   const deleteBtn = e.target.closest('.delete-product');
   if (deleteBtn) {
@@ -562,10 +500,7 @@ document.getElementById('productsSection')?.addEventListener('click', e => {
     }).then(result => {
       if (result.isConfirmed) {
         fetch(`${API_BASE}/producto/eliminar/byId/${id}`, { method: 'DELETE' })
-          .then(() => {
-            Swal.fire('Eliminado', '', 'success');
-            cargarProductos();
-          })
+          .then(() => { Swal.fire('Eliminado', '', 'success'); cargarProductos(); })
           .catch(() => Swal.fire('Error', 'No se pudo eliminar', 'error'));
       }
     });
