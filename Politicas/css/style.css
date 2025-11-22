@@ -1,0 +1,119 @@
+ :root {
+      --primary: #0e7b16;
+      --secondary: #4a783c;
+      --accent: #8db860;
+      --light-green: #f0f8f0;
+      --dark: #1a1a1a;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #fff;
+      color: var(--dark);
+      line-height: 1.8;
+    }
+
+    .navbar {
+      background: rgba(14, 123, 22, 0.98) !important;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .hero {
+      background: linear-gradient(rgba(14, 123, 22, 0.92), rgba(14, 123, 22, 0.98)), 
+                  url('https://images.unsplash.com/photo-1556909114-f6e7ad2d3136?q=80&w=2070') no-repeat center center;
+      background-size: cover;
+      color: white;
+      padding: 140px 0 100px;
+      position: relative;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 120px;
+      background: linear-gradient(transparent, white);
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 4.5rem;
+      font-weight: 900;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      color: var(--primary);
+      font-size: 2.8rem;
+      position: relative;
+      padding-bottom: 15px;
+      margin-bottom: 40px;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 0;
+      width: 90px;
+      height: 4px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+
+    .privacy-card {
+      background: white;
+      border-radius: 18px;
+      padding: 35px;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.08);
+      margin-bottom: 30px;
+      border-left: 5px solid var(--accent);
+      transition: all 0.3s ease;
+    }
+
+    .privacy-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 45px rgba(0,0,0,0.14);
+    }
+
+    .icon-shield {
+      width: 80px;
+      height: 80px;
+      background: var(--accent);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      margin: 0 auto 25px;
+    }
+
+    .list-check li {
+      padding-left: 10px;
+      margin-bottom: 12px;
+      position: relative;
+    }
+
+    .list-check li::before {
+      content: '✓';
+      color: var(--primary);
+      font-weight: bold;
+      position: absolute;
+      left: -25px;
+    }
+
+    footer {
+      background: var(--dark);
+      color: white;
+      padding: 80px 0 40px;
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 3.2rem; }
+      .privacy-card { padding: 25px; }
+    }
